@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.TextView;
-
 import com.android.volley.toolbox.ImageLoader;
 
 import java.util.Calendar;
@@ -71,7 +70,7 @@ public class ArticleDetailFragment extends Fragment {
 
         ArticleImageView.setImageUrl(currentArticle.getUrlimage(), imageLoader);
         Date.setText(currentArticle.getDate());
-        Location.setText(currentArticle.getLocation());
+        Location.setText(currentArticle.getRawLocation());
         User.setText(currentArticle.getUser());
         Category.setText(currentArticle.getCategory());
         Title.setText(currentArticle.getTitle());

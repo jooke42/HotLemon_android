@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.location.Location;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -35,6 +36,9 @@ import france.bosch.estelle.android_hotlemon.Class.Article;
 
 import france.bosch.estelle.android_hotlemon.Fragments.ArticleDetailFragment;
 import france.bosch.estelle.android_hotlemon.Fragments.ArticleFragment;
+import france.bosch.estelle.android_hotlemon.Fragments.EditProfilFragment;
+import france.bosch.estelle.android_hotlemon.Fragments.Fragment_CreateArticle;
+import france.bosch.estelle.android_hotlemon.Helper.PlaceActivityUtility;
 
 
 public class MainActivity extends AppCompatActivity
@@ -70,8 +74,8 @@ public class MainActivity extends AppCompatActivity
         framelayout = (RelativeLayout)findViewById(R.id.content_main);
         ArticleFragment fr = new ArticleFragment();
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
         transaction.add(R.id.content_main,fr,"tag");
+        transaction.commit();
 
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -90,7 +94,6 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
     }
 
     @Override
@@ -137,7 +140,7 @@ public class MainActivity extends AppCompatActivity
                 switchFragment(new ArticleFragment());
 
         } else if (id == R.id.nav_slideshow) {
-
+            switchFragment(new EditProfilFragment());
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {

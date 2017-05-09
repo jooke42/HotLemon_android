@@ -49,7 +49,7 @@ public class Article_Item_Adapter extends ArrayAdapter<Article> {
 
         item_title.setText(a.getTitle());
         item_user.setText(a.getUser());
-        item_location.setText(a.getLocation());
+        item_location.setText(a.getRawLocation());
 
         // Feed image
         if (a.getUrlimage() != null) {

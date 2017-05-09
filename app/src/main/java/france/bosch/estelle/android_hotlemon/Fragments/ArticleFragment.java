@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+
 import com.android.volley.Cache;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -38,7 +39,6 @@ public class ArticleFragment extends Fragment {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private String URL_FEED = "https://perso.esiee.fr/~pereirae/webe3fi/test.json";
-
     private GridView gridView;
     private Article_Item_Adapter adapter;
     private ArticleFragmentListener listener;
@@ -47,7 +47,7 @@ public class ArticleFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static ArticleFragment newInstance(String param1, String param2) {
+    public static ArticleFragment newInstance() {
         ArticleFragment fragment = new ArticleFragment();
         return fragment;
     }
@@ -64,9 +64,8 @@ public class ArticleFragment extends Fragment {
         root = inflater.inflate(R.layout.fragment_article, container, false);
 
         gridView = (GridView) root.findViewById(R.id.grid_article);
-        adapter = new Article_Item_Adapter(getActivity(),R.layout.article_item,  ((MainActivity)(getActivity())).getListArticle());
+        adapter = new Article_Item_Adapter(getActivity(), R.layout.article_item,  ((MainActivity)(getActivity())).getListArticle());
         gridView.setAdapter(adapter);
-
         FloatingActionButton button = (FloatingActionButton) root.findViewById(R.id.fab_create_article);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,7 +156,7 @@ public class ArticleFragment extends Fragment {
 
                 Article item = new Article();
                 item.setTitle(feedObj.getString("title"));
-                item.setLocation(feedObj.getString("location"));
+                item.setRawLocation(feedObj.getString("location"));
                 item.setUser(feedObj.getString("user"));
                 item.setDescription(feedObj.getString("description"));
                 item.setCategory(feedObj.getString("category"));

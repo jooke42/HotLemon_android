@@ -90,7 +90,6 @@
                 android:id="@+id/distance"
                 android:textAlignment="center"
                 android:layout_weight="1" />
-
         </LinearLayout>
 
         <LinearLayout
