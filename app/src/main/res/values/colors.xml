@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#00a651</color>
+    <color name="colorPrimaryDark">#00a651</color>
+    <color name="colorAccent">#7fd2a8</color>
+    <color name="Grenn">#3f51b5</color>
+    <color name="Green">#00a651</color>
+    <color name="colorBackground">#F8F8F8</color>
+    <color name="colorNavAccentSelected">#9D0E15</color>
+    <color name="colorNavAccentUnselected">#727272</color>
+</resources>
