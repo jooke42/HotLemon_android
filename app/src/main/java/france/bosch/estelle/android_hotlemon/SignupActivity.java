@@ -29,7 +29,7 @@ import france.bosch.estelle.android_hotlemon.Class.Utilisateur;
 
 public class SignupActivity extends AppCompatActivity {
     private static final String TAG = "SignupActivity";
-    private static final String REGISTER_URL = "http://82.232.20.224/rest-auth/registration/"; // TODO
+    private static final String REGISTER_URL = "http://82.232.20.224/rest-auth/registration/";
 
     @InjectView(R.id.input_name) EditText _nameText;
     @InjectView(R.id.input_email) EditText _emailText;
@@ -69,17 +69,19 @@ public class SignupActivity extends AppCompatActivity {
 
         _signupButton.setEnabled(false);
 
+        // Create progress dialog as loading screen
         final ProgressDialog progressDialog = new ProgressDialog(SignupActivity.this,
-                R.style.AppTheme_Dark_Dialog);
+                R.layout.loading_screen_layout);
         progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Creating Account...");
+        progressDialog.setMessage("Creating account...");
         progressDialog.show();
 
+        // Scrap user credentials
         String name = _nameText.getText().toString();
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
 
-        // TODO: Implement your own signup logic here.
+        // Set new Utilisateur to be converted as JSON Object
         Utilisateur user = new Utilisateur();
         user.setUsername(name);
         user.setEmail(email);
@@ -91,7 +93,7 @@ public class SignupActivity extends AppCompatActivity {
         params.put("password1", user.getPassword());
         params.put("password2", user.getPassword());
 
-        // try to send a POST HTTP Request with previous JSONObject in parameter
+        // Try to send a POST HTTP Request with previous JSONObject in parameter
         JsonObjectRequest req = new JsonObjectRequest(REGISTER_URL, new JSONObject(params),
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -116,7 +118,6 @@ public class SignupActivity extends AppCompatActivity {
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<String, String>();
                 headers.put("Content-Type", "application/json");
-                headers.put("key", "31a7d5ff6b03521e92c59029f609b336bdb9b4a0");
                 return headers;
             }
         };
@@ -139,7 +140,6 @@ public class SignupActivity extends AppCompatActivity {
                 }, 3000);
         */
     }
-
 
     public void onSignupSuccess() {
         Toast.makeText(getBaseContext(), "Sign up succeeded", Toast.LENGTH_LONG).show();

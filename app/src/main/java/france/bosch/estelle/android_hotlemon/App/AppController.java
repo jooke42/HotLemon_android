@@ -20,6 +20,8 @@ public class AppController extends Application {
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
 
+    private String key;
+
     private static AppController mInstance;
 
     @Override
@@ -64,5 +66,13 @@ public class AppController extends Application {
         if (mRequestQueue != null) {
             mRequestQueue.cancelAll(tag);
         }
+    }
+
+    public void setKeyToken(String _key) {
+        this.key = _key;
+    }
+
+    public String getKeyToken() {
+        return this.key;
     }
 }

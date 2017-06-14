@@ -9,8 +9,8 @@ public class Utilisateur {
 
     public Utilisateur() {}
 
-    public Utilisateur(String email, String password) {
-        this.email = email;
+    public Utilisateur(String username, String password) {
+        this.username = username;
         this.password = password;
     }
 
