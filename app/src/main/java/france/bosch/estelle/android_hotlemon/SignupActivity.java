@@ -71,7 +71,7 @@ public class SignupActivity extends AppCompatActivity {
 
         // Create progress dialog as loading screen
         final ProgressDialog progressDialog = new ProgressDialog(SignupActivity.this,
-                R.layout.loading_screen_layout);
+                R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Creating account...");
         progressDialog.show();
@@ -109,8 +109,8 @@ public class SignupActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                VolleyLog.e("Error: ", error.getMessage());
-                Log.e("Error: ", error.getMessage());
+                VolleyLog.e("Error: ", error.getStackTrace().toString());
+                Log.e("Error: ", error.getStackTrace().toString());
                 onSignupFailed();
             }
         }) {
@@ -127,8 +127,7 @@ public class SignupActivity extends AppCompatActivity {
         progressDialog.dismiss();
 
         // WUT ?
-        /*
-        new android.os.Handler().postDelayed(
+        /*new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
                         // On complete call either onSignupSuccess or onSignupFailed
@@ -137,8 +136,7 @@ public class SignupActivity extends AppCompatActivity {
                         // onSignupFailed();
                         progressDialog.dismiss();
                     }
-                }, 3000);
-        */
+                }, 3000);*/
     }
 
     public void onSignupSuccess() {

@@ -6,41 +6,53 @@
     android:weightSum="1">
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="115dp">
+        android:layout_height="115dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:orientation="vertical"
             android:weightSum="1">
 
             <TextView
-                android:text="Photo de profil"
-                android:layout_width="194dp"
-                android:layout_height="wrap_content"
                 android:id="@+id/textView3"
-                android:textSize="25sp"
-                android:layout_weight="1.13" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.38"
+                android:gravity="center"
+                android:text="Photo de profil"
+                android:textAlignment="center"
+                android:textSize="25sp" />
 
             <Button
-                android:text="Parcourir..."
+                android:id="@+id/button2"
+                style="@android:style/Widget.Button"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/button2"
+                android:layout_gravity="center"
                 android:background="@color/colorAccent"
-                style="@android:style/Widget.Button"
-                android:textColor="@android:color/white"
-                android:layout_gravity="center_horizontal" />
+                android:text="Parcourir..."
+                android:textColor="@android:color/white" />
         </LinearLayout>
 
-        <ImageView
-            android:layout_width="177dp"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/amal"
-            android:id="@+id/imageView4" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/amal" />
+        </FrameLayout>
+
     </LinearLayout>
 
     <RelativeLayout
@@ -48,109 +60,109 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:text="E-mail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
             android:layout_weight="0.04"
-            android:textSize="25sp"
-            android:layout_alignParentTop="true" />
+            android:text="E-mail"
+            android:textSize="20sp" />
 
         <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:ems="10"
             android:id="@+id/editText2"
-            android:layout_below="@+id/textView5"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:hint="Silvermoon" />
-
-        <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:ems="10"
-            android:layout_below="@+id/textView6"
-            android:layout_alignParentStart="true"
-            android:id="@+id/editText3"
             android:layout_alignParentEnd="true"
-            android:hint="Estelle" />
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textView5"
+            android:ems="10"
+            android:hint="Silvermoon"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/editText3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textView6"
+            android:ems="10"
+            android:hint="Estelle"
+            android:inputType="textPersonName" />
 
         <TextView
-            android:text="Nom"
+            android:id="@+id/textView7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textView7"
-            android:textSize="25sp"
-            android:layout_below="@+id/editText3"
             android:layout_alignParentStart="true"
+            android:layout_below="@+id/editText3"
+            android:text="Nom"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textView4"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="estelle.pereira@gmail.com"
+            android:inputType="textEmailAddress"
             android:layout_alignParentEnd="true" />
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            android:ems="10"
-            android:id="@+id/editText"
-            android:hint="estelle.pereira@gmail.com"
-            android:layout_weight="1"
-            android:layout_below="@+id/textView4"
-            android:layout_alignParentStart="true" />
-
         <TextView
-            android:text="Prénom"
+            android:id="@+id/textView6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textView6"
-            android:textSize="25sp"
+            android:text="Prénom"
+            android:textSize="20sp"
             android:layout_below="@+id/editText2"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="16dp" />
+            android:layout_alignParentStart="true" />
 
         <Button
-            android:text="Enregistrer "
+            android:id="@+id/button3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/button3"
+            android:background="@color/colorAccent"
+            android:text="Enregistrer "
             android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:background="@color/colorAccent" />
+            android:layout_centerHorizontal="true" />
 
         <TextView
-            android:text="Pseudo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/textView5"
-            android:layout_weight="0.04"
-            android:textSize="25sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
             android:layout_below="@+id/editText"
-            android:layout_alignParentStart="true" />
+            android:layout_weight="0.04"
+            android:text="Pseudo"
+            android:textSize="20sp" />
 
         <EditText
+            android:id="@+id/editText4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:ems="10"
-            android:id="@+id/editText4"
-            android:hint="Pereira"
-            android:layout_below="@+id/textView7"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_below="@+id/textView7"
+            android:ems="10"
+            android:hint="Pereira"
+            android:inputType="textPersonName" />
 
         <android.support.design.widget.FloatingActionButton
+            android:id="@+id/floatingActionButton7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:clickable="true"
-            app:fabSize="mini"
-            app:srcCompat="@drawable/web_hi_res_512"
-            android:id="@+id/floatingActionButton7"
-            android:layout_below="@+id/textView4"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:clickable="true"
+            android:tint="@android:color/transparent"
+            android:visibility="visible"
             app:backgroundTint="@android:color/transparent"
+            app:fabSize="mini"
             app:rippleColor="@android:color/transparent"
-            android:tint="@android:color/transparent" />
+            app:srcCompat="@drawable/web_hi_res_512" />
 
     </RelativeLayout>
 

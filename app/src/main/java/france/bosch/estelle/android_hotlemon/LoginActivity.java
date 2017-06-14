@@ -77,7 +77,7 @@ public class LoginActivity extends AppCompatActivity {
         _loginButton.setEnabled(false);
 
         final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
-                R.layout.loading_screen_layout);
+                R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Authenticating...");
         progressDialog.show();
@@ -107,7 +107,6 @@ public class LoginActivity extends AppCompatActivity {
                             AppController.getInstance().setKeyToken(key);
                             VolleyLog.v("Response:%n %s", response.toString(4));
                             Log.v("Response:%n %s", response.toString(4));
-                            Log.v("Key: %s", AppController.getInstance().getKeyToken());
                             onLoginSuccess();
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -116,8 +115,8 @@ public class LoginActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                VolleyLog.e("Error: ", error.getMessage());
-                Log.e("Error: ", error.getMessage());
+                VolleyLog.e("Error: ", error.getStackTrace().toString());
+                Log.e("Error: ", error.getStackTrace().toString());
                 onLoginFailed();
             }
         }) {

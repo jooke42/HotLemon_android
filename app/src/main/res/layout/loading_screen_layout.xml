@@ -13,12 +13,12 @@
         android:layout_gravity="center_horizontal" />
 
     <TextView
-        android:text="Votre journal local participatif."
+        android:id="@+id/loading_hint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textView2"
-        android:textColor="@android:color/background_light"
         android:gravity="center"
+        android:text="Votre journal local participatif."
+        android:textColor="@android:color/background_light"
         android:textSize="18sp" />
 
     <Space
@@ -34,12 +34,12 @@
         android:indeterminate="true" />
 
     <TextView
-        android:text="Chargement"
+        android:id="@+id/loading_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textView3"
-        android:textColor="@android:color/background_light"
-        android:gravity="center" />
+        android:gravity="center"
+        android:text="Chargement"
+        android:textColor="@android:color/background_light" />
 
     <Space
         android:layout_width="match_parent"
