@@ -1,5 +1,6 @@
 package france.bosch.estelle.android_hotlemon.Class;
 
+import android.graphics.Bitmap;
 import android.location.Location;
 
 import com.google.android.gms.location.places.Place;
@@ -15,6 +16,7 @@ public class Article {
     private String title, rawLocation, user, description, category, date;
     String UrlImage;
     Place location;
+    Bitmap image;
     int distance;
 
     public String getDate() {
@@ -48,6 +50,10 @@ public class Article {
     public void setUrlimage(String urlimage) {
         UrlImage = urlimage;
     }
+
+    public Bitmap getImage() { return image; }
+
+    public void setImage(Bitmap image) { this.image = image; }
 
     public Article(){
         this.title = "";

@@ -2,7 +2,7 @@ package france.bosch.estelle.android_hotlemon.Fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
@@ -67,6 +67,7 @@ public class ArticleFragment extends Fragment {
         adapter = new Article_Item_Adapter(getActivity(), R.layout.article_item,  ((MainActivity)(getActivity())).getListArticle());
         gridView.setAdapter(adapter);
         FloatingActionButton button = (FloatingActionButton) root.findViewById(R.id.fab_create_article);
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -135,6 +136,12 @@ public class ArticleFragment extends Fragment {
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        AppController.getInstance().cancelPendingRequests(TAG);
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try{
@@ -155,6 +162,7 @@ public class ArticleFragment extends Fragment {
                 JSONObject feedObj = (JSONObject) feedArray.get(i);
 
                 Article item = new Article();
+
                 item.setTitle(feedObj.getString("title"));
                 item.setRawLocation(feedObj.getString("location"));
                 item.setUser(feedObj.getString("user"));
@@ -166,23 +174,6 @@ public class ArticleFragment extends Fragment {
                 String image = feedObj.isNull("Urlimage") ? null : feedObj
                         .getString("Urlimage");
                 item.setUrlimage(image);
-
-                /*item.setId(feedObj.getInt("id"));
-                item.setName(feedObj.getString("name"));
-
-                // Image might be null sometimes
-                String image = feedObj.isNull("image") ? null : feedObj
-                        .getString("image");
-                item.setImge(image);
-                item.setStatus(feedObj.getString("status"));
-                item.setProfilePic(feedObj.getString("profilePic"));
-                item.setTimeStamp(feedObj.getString("timeStamp"));
-
-                // url might be null sometimes
-                String feedUrl = feedObj.isNull("url") ? null : feedObj
-                        .getString("url");
-                item.setUrl(feedUrl);*/
-
 
                 //// Check ID of Article Item to avoid duplication in gridView when switching fragment
                 ((MainActivity)(getActivity())).addArticle(item);
