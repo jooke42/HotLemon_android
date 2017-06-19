@@ -1,0 +1,85 @@
+package france.bosch.estelle.android_hotlemon.Fragments;
+
+
+import android.support.v4.app.Fragment;
+
+
+import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+
+import france.bosch.estelle.android_hotlemon.Adapter.ViewPagerAdapter;
+import france.bosch.estelle.android_hotlemon.R;
+
+/**
+ * Created by ESTEL on 19/05/2017.
+ */
+
+public class TabFragment extends Fragment {
+    public static TabLayout tabLayout;
+    public static ViewPager viewPager;
+    ViewPagerAdapter adapter;
+
+    public  static  TabFragment newInstance() {
+        TabFragment fragment = new TabFragment();
+
+        return fragment;
+    }
+
+    public TabFragment(){
+
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        View root = inflater.inflate(R.layout.fragment_tab, container, false);
+        viewPager = (ViewPager) root.findViewById(R.id.viewpager);
+        setupViewPager(viewPager);
+        tabLayout = (TabLayout) root.findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
+
+        return root;
+    }
+
+    private  void setupViewPager(ViewPager viewPager) {
+
+        adapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager());
+        adapter.addFragment(Fragment.instantiate(getContext(), HotArticleFragment.class.getName()), "HOT");
+        adapter.addFragment(new Three(), "Trending");
+        adapter.addFragment(new Three(), "Fresh");
+        viewPager.setAdapter(adapter);
+        viewPager.setCurrentItem(0);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        tabLayout.setupWithViewPager(viewPager);
+
+    }
+
+
+    public static ViewPager getviewPager() {
+            return viewPager;
+    }
+
+    public  static TabLayout getTabLayout() {
+        return tabLayout;
+    }
+
+}
+
