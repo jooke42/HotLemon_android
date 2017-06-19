@@ -1,23 +1,16 @@
 package france.bosch.estelle.android_hotlemon.Dialog;
 
-import android.widget.CompoundButton;
-import android.widget.Switch;
-import android.widget.TextView;
-
-
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.TextView;
 import android.support.v4.app.DialogFragment;
+import android.view.View;
+import android.widget.Switch;
+import android.widget.TextView;
 
-import france.bosch.estelle.android_hotlemon.BDD.DataBaseHelper;
+
 import france.bosch.estelle.android_hotlemon.R;
 
 /**
@@ -28,7 +21,6 @@ public class ChooseTypeDialog extends DialogFragment {
         private ChooseTypeListener listener;
         private TextView titre;
         private TextView prix;
-        private DataBaseHelper db;
         private String type;
         private Switch isArticle;
         private Switch isEvent;
@@ -107,14 +99,7 @@ public class ChooseTypeDialog extends DialogFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
-
     }
-
-
-
-
-
 
 
         @Override

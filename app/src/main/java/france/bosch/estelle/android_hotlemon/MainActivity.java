@@ -1,15 +1,12 @@
 package france.bosch.estelle.android_hotlemon;
 
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
-import android.location.Location;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -19,66 +16,68 @@ import android.support.v7.widget.Toolbar;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 
-import com.android.volley.Cache;
-import com.android.volley.Cache.Entry;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlacePicker;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
-import france.bosch.estelle.android_hotlemon.App.AppController;
-import france.bosch.estelle.android_hotlemon.Class.Article;
+import france.bosch.estelle.android_hotlemon.Class.News;
 
+import france.bosch.estelle.android_hotlemon.Class.Topic;
+import france.bosch.estelle.android_hotlemon.Dialog.ChooseTypeDialog;
 import france.bosch.estelle.android_hotlemon.Fragments.ArticleDetailFragment;
 import france.bosch.estelle.android_hotlemon.Fragments.ArticleFragment;
 import france.bosch.estelle.android_hotlemon.Fragments.EditProfilFragment;
 import france.bosch.estelle.android_hotlemon.Fragments.Fragment_CreateArticle;
+import france.bosch.estelle.android_hotlemon.Fragments.Fragment_CreateEvent;
+import france.bosch.estelle.android_hotlemon.Fragments.HotArticleFragment;
+import france.bosch.estelle.android_hotlemon.Fragments.TabFragment;
 import france.bosch.estelle.android_hotlemon.Helper.FragmentUtils;
-import france.bosch.estelle.android_hotlemon.Helper.PlaceActivityUtility;
 
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         ArticleFragment.ArticleFragmentListener,
         Fragment_CreateArticle.CreateArticleListener,
-        FragmentUtils.ActivityForResultStarter
+        FragmentUtils.ActivityForResultStarter,
+        HotArticleFragment.HotArticleFragmentListener,
+        ChooseTypeDialog.ChooseTypeListener
 {
     private SparseArray<Bundle> requests;
     private int PLACE_PICKER_REQUEST = 1;
     private RelativeLayout framelayout;
-    private Article currentArticle;
-    private ArrayList<Article> articles = new ArrayList<Article>();
+    private Topic currentNews;
+    private ArrayList<Topic> newsList = new ArrayList<Topic>();
+    private ArrayList<Topic> freshList = new ArrayList<Topic>();
+    Calendar currentDate = Calendar.getInstance();
 
-    public ArrayList<Article> getArticles() {
-        return this.articles;
+    public ArrayList<Topic> getNews() {
+        return this.newsList;
     }
 
-    public Article getCurrentArticle() {
-        return currentArticle;
+  /*  public ArrayList<Topic> getFresh() {
+        for (Topic t:newsList
+             ) {
+            if(t.getCreatedDate() <= currentDate.getTime())
+                freshList.getClass()(t);
+
+        }
+
+        return this.newsList;
+    }*/
+
+    public Topic getCurrentNews() {
+        return currentNews;
     }
 
-    public void setCurrentArticle(Article currentArticle) {
-        this.currentArticle = currentArticle;
+    public void setCurrentNews(Topic currentNews) {
+        this.currentNews = currentNews;
     }
 
-    public void addArticle(Article article){
-        articles.add(article);
+    public void addArticle(Topic news){
+        newsList.add(news);
     }
 
     @Override
@@ -98,7 +97,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         framelayout = (RelativeLayout) findViewById(R.id.content_main);
-        ArticleFragment fr = new ArticleFragment();
+        TabFragment fr = new TabFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.content_main, fr, "tag");
         transaction.commit();
@@ -212,13 +211,11 @@ public class MainActivity extends AppCompatActivity
         ft.commit();
     }
 
-    public ArrayList<Article> getListArticle(){
-        return articles;
-    };
+
 
     @Override
-    public void onArticleClick(Article article){
-        setCurrentArticle(article);
+    public void onArticleClick(Topic news){
+        setCurrentNews(news);
         switchFragment(new ArticleDetailFragment());
     }
 
@@ -285,5 +282,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onLocationChanged() {
 
+    }
+    @Override
+    public void onChooseValidation(String type){
+        if(type=="article")
+            switchFragment(new Fragment_CreateArticle());
+        if(type=="event")
+            switchFragment(new Fragment_CreateEvent());
     }
 }

@@ -1,13 +1,12 @@
 package france.bosch.estelle.android_hotlemon.Fragments;
 
 
-import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.location.LocationManager;
-
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,10 +19,11 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 
-import france.bosch.estelle.android_hotlemon.BDD.News;
-import france.bosch.estelle.android_hotlemon.BDD.DataBaseHelper;
-import france.bosch.estelle.android_hotlemon.R;
+
+import france.bosch.estelle.android_hotlemon.Class.Event;
+import france.bosch.estelle.android_hotlemon.Class.News;
 import france.bosch.estelle.android_hotlemon.MainActivity;
+import france.bosch.estelle.android_hotlemon.R;
 
 /**
  * Created by ESTEL on 20/04/2017.
@@ -36,7 +36,7 @@ public class Fragment_CreateEvent extends Fragment{
     private TextView Location;
     private int PLACE_PICKER_REQUEST = 1;
     private Place selectedPlace;
-    private DataBaseHelper DB;
+
 
 
 
@@ -91,9 +91,9 @@ public class Fragment_CreateEvent extends Fragment{
         // EditText User = (EditText) getView().findViewById(R.id.user) ;
         EditText editDesc= (EditText) getView().findViewById(R.id.newArticle_Description);
 
-        News article = new News(Titre.getText().toString(),editDesc.getText().toString(),selectedPlace);
-        News.save(article);
-        //((MainActivity)(getActivity())).addArticle(article);
+
+        Event article = new Event(Titre.getText().toString(),editDesc.getText().toString(),selectedPlace);
+        ((MainActivity)(getActivity())).addArticle(article);
         ((MainActivity)(getActivity())).switchFragment( new TabFragment());
     }
 

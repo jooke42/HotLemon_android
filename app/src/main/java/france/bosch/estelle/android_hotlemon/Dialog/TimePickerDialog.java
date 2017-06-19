@@ -8,8 +8,6 @@ import android.widget.DatePicker;
 
 import java.util.Calendar;
 
-import france.bosch.estelle.android_hotlemon.Fragments.Fragment_CreateEvent;
-
 /**
  * Created by ESTEL on 30/05/2017.
  */

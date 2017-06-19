@@ -7,9 +7,17 @@ package france.bosch.estelle.android_hotlemon.Class;
 public class Topic {
 
     private Long id;
-    private String title, Author, Body, CreatedDate, PublishedDate;
+    protected String title, Author, Body, CreatedDate, PublishedDate;
     int VoteFor, VoteAgainst;
+    String urlImage;
 
+    public String getUrlImage() {
+        return urlImage;
+    }
+
+    public void setUrlImage(String urlImage) {
+        this.urlImage = urlImage;
+    }
 
     public Long getId() {
         return id;
@@ -58,13 +66,18 @@ public class Topic {
     public void setPublishedDate(String publishedDate) {
         PublishedDate = publishedDate;
     }
-
     public int getVoteFor() {
         return VoteFor;
     }
 
     public void setVoteFor(int voteFor) {
         VoteFor = voteFor;
+    }
+    public void updateVoteFor() {
+        VoteFor += 1 ;
+    }
+    public void updateVoteAgainst() {
+        VoteAgainst += 1 ;
     }
 
     public int getVoteAgainst() {
@@ -73,6 +86,10 @@ public class Topic {
 
     public void setVoteAgainst(int voteAgainst) {
         VoteAgainst = voteAgainst;
+    }
+
+    public int getVote(){
+        return VoteFor - VoteAgainst;
     }
 }
 

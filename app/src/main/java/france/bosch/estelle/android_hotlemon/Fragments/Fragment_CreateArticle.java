@@ -2,6 +2,7 @@ package france.bosch.estelle.android_hotlemon.Fragments;
 
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -13,7 +14,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +22,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.Cache;
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
@@ -36,24 +34,27 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Timer;
 
 import france.bosch.estelle.android_hotlemon.App.AppController;
-import france.bosch.estelle.android_hotlemon.Helper.FragmentUtils;
 import france.bosch.estelle.android_hotlemon.R;
 import france.bosch.estelle.android_hotlemon.MainActivity;
-import france.bosch.estelle.android_hotlemon.Class.Article;
+import france.bosch.estelle.android_hotlemon.Class.News;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by ESTEL on 20/04/2017.
  */
 
 public class Fragment_CreateArticle extends Fragment {
+
+
 
     public interface CreateArticleListener {
         void onSelectImage();
@@ -66,11 +67,11 @@ public class Fragment_CreateArticle extends Fragment {
     private String URL_FEED = "https://perso.esiee.fr/~pereirae/webe3fi/test.json";
     private String URL_FEED_POST = ""; // Marteaux's RaspberryPI URL
     private int PLACE_PICKER_REQUEST = 1;
-
+    private Bitmap toretBitmap;
     // Internal variables
     private CreateArticleListener listener;
     private Button add_bt;
-    private FloatingActionButton location;
+
     private Button selectImage;
     private ImageView selectedImage;
     private TextView Location;
@@ -85,7 +86,7 @@ public class Fragment_CreateArticle extends Fragment {
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_ajouter_article, container, false);
         add_bt = (Button) root.findViewById(R.id.poster_article);
-        location = (FloatingActionButton) root.findViewById(R.id.change_location);
+
         selectImage = (Button) root.findViewById(R.id.selectimage);
         Location = (TextView) root.findViewById(R.id.newArticle_Location);
         return root;
@@ -100,12 +101,7 @@ public class Fragment_CreateArticle extends Fragment {
                 Add_OnClick();
             }
         });
-        location.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setLocation();
-            }
-        });
+
         selectImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -147,6 +143,20 @@ public class Fragment_CreateArticle extends Fragment {
             Location.setText(placeName);
             selectedPlace = place;
         }
+
+        if(resultCode == RESULT_OK){
+            try {
+                InputStream IS = getContext().getContentResolver().openInputStream(data.getData());
+                toretBitmap = BitmapFactory.decodeStream(IS);
+                ImageView imageView = (ImageView) getView().findViewById(R.id.imageView2);
+                imageView.setImageBitmap(toretBitmap);
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+
     }
 
     private void Add_OnClick()
@@ -161,27 +171,28 @@ public class Fragment_CreateArticle extends Fragment {
         EditText editDesc = (EditText) getView().findViewById(R.id.newArticle_Description);
         ImageView selectedImage = (ImageView) getView().findViewById(R.id.imageView2);
 
-        Article article = new Article();
-        article.setTitle(titre.getText().toString());
-        article.setLocation(selectedPlace);
-        article.setUser("TODO");
-        article.setDescription(editDesc.getText().toString());
-        article.setCategory("TODO");
-        article.setDate(formattedDate);
-        article.setImage(((BitmapDrawable)selectedImage.getDrawable()).getBitmap());
+        News news = new News();
+        news.setTitle(titre.getText().toString());
+       // news.setLocation(selectedPlace);
+        news.setAuthor("TODO");
+        news.setBody(editDesc.getText().toString());
+        //news.se("TODO");
+        news.setCreatedDate(formattedDate);
+        if(selectedImage != null && selectedImage.getDrawable() != null)
+            news.setImage(((BitmapDrawable)selectedImage.getDrawable()).getBitmap());
 
-        // add article to local array then
-        ((MainActivity)(getActivity())).addArticle(article);
+        // add news to local array then
+        ((MainActivity)(getActivity())).addArticle(news);
 
         // create HashMap to feed a JSONObject
         HashMap<String, Object> params = new HashMap<>();
-        params.put("title", article.getTitle());
-        params.put("location", article.getRawLocation());
-        params.put("user", article.getUser());
-        params.put("description", article.getDescription());
-        params.put("category", article.getCategory());
-        params.put("date", article.getDate());
-        params.put("image", article.getImage());
+        params.put("title", news.getTitle());
+       // params.put("location", news.getRawLocation());
+        params.put("user", news.getAuthor());
+        params.put("description", news.getBody());
+        //params.put("category", news.getCategory());
+        params.put("date", news.getCreatedDate());
+        params.put("image", news.getImage());
 
         // try to send a POST HTTP Request with previous JSONObject in parameter
         JsonObjectRequest req = new JsonObjectRequest(URL_FEED_POST, new JSONObject(params),
@@ -205,7 +216,7 @@ public class Fragment_CreateArticle extends Fragment {
         AppController.getInstance().addToRequestQueue(req);
 
         // finally, switch fragment to go back to the main view of the UI
-        ((MainActivity)(getActivity())).switchFragment(new ArticleFragment());
+        ((MainActivity)(getActivity())).switchFragment(new TabFragment());
     }
 
     private void setLocation()  {

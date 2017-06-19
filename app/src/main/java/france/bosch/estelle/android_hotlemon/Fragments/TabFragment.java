@@ -1,16 +1,13 @@
 package france.bosch.estelle.android_hotlemon.Fragments;
 
 
-import android.support.v4.app.Fragment;
-
-
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 
 import france.bosch.estelle.android_hotlemon.Adapter.ViewPagerAdapter;
 import france.bosch.estelle.android_hotlemon.R;
@@ -24,11 +21,7 @@ public class TabFragment extends Fragment {
     public static ViewPager viewPager;
     ViewPagerAdapter adapter;
 
-    public  static  TabFragment newInstance() {
-        TabFragment fragment = new TabFragment();
 
-        return fragment;
-    }
 
     public TabFragment(){
 

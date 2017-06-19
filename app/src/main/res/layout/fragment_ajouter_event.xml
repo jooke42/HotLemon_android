@@ -11,15 +11,13 @@
         android:layout_height="wrap_content">
 
         <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="54dp"
-            android:inputType="textPersonName"
-            android:ems="10"
             android:id="@+id/newArticle_Title"
-            android:layout_weight="1"
-            android:hint="Nom de l'article"
-            android:textCursorDrawable="@color/colorPrimary"
-            />
+            android:layout_width="wrap_content"
+            android:layout_height="63dp"
+            android:ems="10"
+            android:hint="Titre"
+            android:inputType="textPersonName"
+            android:textCursorDrawable="@color/colorPrimary" />
 
     </LinearLayout>
 
@@ -46,18 +44,18 @@
     </LinearLayout>
 
     <ImageView
-        android:layout_width="match_parent"
         android:id="@+id/imageView2"
+        android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:layout_weight="0.14" />
+        android:layout_weight="6.09" />
 
     <Button
-        android:text="Parcourir..."
+        android:id="@+id/selectimage"
         android:layout_width="256dp"
         android:layout_height="wrap_content"
-        android:id="@+id/selectimage"
         android:layout_gravity="center_horizontal"
         android:background="@color/colorAccent"
+        android:text="Parcourir..."
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:textColor="@android:color/background_light" />
 
@@ -69,7 +67,7 @@
 
         <EditText
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="206dp"
             android:inputType="textPersonName"
             android:ems="10"
             android:id="@+id/newArticle_Description"
@@ -85,5 +83,6 @@
         android:layout_gravity="center_horizontal"
         android:backgroundTint="@color/colorAccent"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-        android:textColor="@android:color/background_light" />
+        android:textColor="@android:color/background_light"
+        android:layout_weight="0.15" />
 </LinearLayout>

@@ -8,125 +8,121 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1.5">
+        android:layout_height="216dp">
 
         <france.bosch.estelle.android_hotlemon.ArticleImageView
             android:layout_width="match_parent"
-            android:layout_height="251dp"
+            android:layout_height="213dp"
             app:srcCompat="@drawable/amal"
             android:id="@+id/article_image_view"
             android:layout_weight="0.02"
             android:layout_alignParentStart="true" />
+
     </FrameLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="69dp"
         android:layout_alignBottom="@+id/article_image_view"
         android:layout_alignParentStart="true"
-        android:background="?android:attr/colorButtonNormal"
-        android:layout_weight="0.04">
+        android:layout_weight="0.19"
+        android:background="@color/com_facebook_button_like_background_color_selected"
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="0.05"
+            android:orientation="vertical"
             android:weightSum="1">
 
             <TextView
-                android:text="Date"
+                android:id="@+id/date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/date"
+                android:gravity="center_vertical|center"
+                android:paddingLeft="10dp"
+                android:text="Date"
                 android:textColor="@android:color/background_light"
-                android:gravity="center_vertical"
-                android:paddingLeft="10dp" />
+                android:layout_weight="0.57" />
 
             <TextView
-                android:text="miskinalien"
+                android:id="@+id/user"
                 android:layout_width="129dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/user"
-                android:textColor="@android:color/background_light"
-                android:gravity="center_vertical"
+                android:layout_weight="0.47"
+                android:gravity="center_vertical|center"
                 android:paddingLeft="10dp"
-                android:layout_weight="0.96" />
-
-            <TextView
-                android:text="Insolite"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/category"
-                android:textColor="@android:color/background_light"
-                android:gravity="center_vertical"
-                android:paddingLeft="10dp" />
+                android:text="miskinalien"
+                android:textColor="@android:color/background_light" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="0.05"
+            android:orientation="vertical"
             android:weightSum="1">
 
             <TextView
-                android:text="Titre"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:id="@+id/titre"
-                android:textColor="@android:color/background_light"
-                android:textAlignment="center"
-                android:gravity="center"
-                android:layout_weight="1" />
-
-            <TextView
-                android:text="7km"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/distance"
+                android:layout_weight="0.76"
+                android:gravity="center"
+                android:text="Titre"
                 android:textAlignment="center"
-                android:layout_weight="1" />
+
+                android:textColor="@android:color/background_light" />
+
+
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0.05">
+            android:layout_weight="0.05"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.02"
-                android:gravity="center_horizontal">
+                android:layout_height="58dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:weightSum="1">
 
                 <android.support.design.widget.FloatingActionButton
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/voteAgainst"
+                    android:layout_width="wrap_content"
+                    android:layout_height="52dp"
+                    android:layout_gravity="center_vertical"
+
                     android:clickable="true"
+                    app:backgroundTint="@android:color/holo_blue_bright"
                     app:fabSize="mini"
-                    app:srcCompat="@android:drawable/alert_light_frame"
-                    android:id="@+id/floatingActionButton2"
-                    android:layout_weight="1"
-                    app:backgroundTint="@android:color/holo_blue_light"
-                    android:layout_gravity="center_horizontal|center" />
+                    app:srcCompat="@drawable/thumb_down_outline" />
+
 
                 <android.support.design.widget.FloatingActionButton
-                    android:layout_width="match_parent"
+                    android:id="@+id/voteFor"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:clickable="true"
+                    app:backgroundTint="@android:color/holo_orange_light"
                     app:fabSize="mini"
-                    app:srcCompat="@android:drawable/alert_dark_frame"
-                    android:id="@+id/floatingActionButton"
-                    android:layout_weight="1"
-                    android:layout_gravity="center"
-                    app:backgroundTint="?android:attr/colorActivatedHighlight" />
+                    app:srcCompat="@drawable/thumb_up_outline" />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/vote"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.01"
+                android:gravity="center"
+                android:text="Vote"
+                android:textColor="@color/white" />
 
         </LinearLayout>
 
@@ -137,6 +133,9 @@
         android:layout_height="95dp"
         android:id="@+id/article_description"
         android:layout_marginTop="10dp"
-        android:textAlignment="center" />
+
+        android:textAlignment="center"
+        android:layout_weight="0.56" />
+
 
 </LinearLayout>

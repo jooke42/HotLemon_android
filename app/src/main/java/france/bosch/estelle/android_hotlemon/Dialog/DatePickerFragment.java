@@ -2,13 +2,11 @@ package france.bosch.estelle.android_hotlemon.Dialog;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.widget.DatePicker;
 
 import java.util.Calendar;
-
-import france.bosch.estelle.android_hotlemon.Fragments.Fragment_CreateEvent;
 
 public class DatePickerFragment extends DialogFragment
         implements DatePickerDialog.OnDateSetListener {

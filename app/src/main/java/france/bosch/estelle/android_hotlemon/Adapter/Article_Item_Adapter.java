@@ -1,12 +1,10 @@
 package france.bosch.estelle.android_hotlemon.Adapter;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -15,18 +13,18 @@ import java.util.List;
 
 import france.bosch.estelle.android_hotlemon.App.AppController;
 import france.bosch.estelle.android_hotlemon.ArticleImageView;
-import france.bosch.estelle.android_hotlemon.Class.Article;
+import france.bosch.estelle.android_hotlemon.Class.News;
+import france.bosch.estelle.android_hotlemon.Class.Topic;
 import france.bosch.estelle.android_hotlemon.R;
-import france.bosch.estelle.android_hotlemon.Helper.ImageUtile;
 
 /**
  * Created by ESTEL on 20/04/2017.
  */
 
-public class Article_Item_Adapter extends ArrayAdapter<Article> {
+public class Article_Item_Adapter extends ArrayAdapter<Topic> {
     ImageLoader imageLoader = AppController.getInstance().getImageLoader();
 
-    public Article_Item_Adapter(Context context, int resource, List<Article> objects) {
+    public Article_Item_Adapter(Context context, int resource, List<Topic> objects) {
         super(context, resource, objects);
     }
 
@@ -41,19 +39,19 @@ public class Article_Item_Adapter extends ArrayAdapter<Article> {
             root = convertView;
         }
 
-        Article a = getItem(position);
+        Topic a = getItem(position);
         TextView item_title = (TextView)root.findViewById(R.id.article_title);
         TextView item_user = (TextView)root.findViewById(R.id.article_user);
         TextView item_location = (TextView)root.findViewById(R.id.article_location);
         ArticleImageView feedImageView = (ArticleImageView)root.findViewById(R.id.feedImage1);
 
         item_title.setText(a.getTitle());
-        item_user.setText(a.getUser());
-        item_location.setText(a.getRawLocation());
+        item_user.setText(a.getAuthor());
+        //item_location.setText(a.g());
 
         // Feed image
-        if (a.getUrlimage() != null) {
-            feedImageView.setImageUrl(a.getUrlimage(), imageLoader);
+        if (a.getUrlImage() != null) {
+            feedImageView.setImageUrl(a.getUrlImage(), imageLoader);
             feedImageView.setVisibility(View.VISIBLE);
             feedImageView
                     .setResponseObserver(new ArticleImageView.ResponseObserver() {

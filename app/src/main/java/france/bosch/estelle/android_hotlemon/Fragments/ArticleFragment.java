@@ -27,14 +27,16 @@ import java.io.UnsupportedEncodingException;
 
 import france.bosch.estelle.android_hotlemon.Adapter.Article_Item_Adapter;
 import france.bosch.estelle.android_hotlemon.App.AppController;
-import france.bosch.estelle.android_hotlemon.Class.Article;
+import france.bosch.estelle.android_hotlemon.Class.News;
+import france.bosch.estelle.android_hotlemon.Class.Topic;
+import france.bosch.estelle.android_hotlemon.Dialog.ChooseTypeDialog;
 import france.bosch.estelle.android_hotlemon.MainActivity;
 import france.bosch.estelle.android_hotlemon.R;
 
 public class ArticleFragment extends Fragment {
 
     public interface ArticleFragmentListener {
-        void onArticleClick(Article article);
+        void onArticleClick(Topic news);
     }
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -64,14 +66,14 @@ public class ArticleFragment extends Fragment {
         root = inflater.inflate(R.layout.fragment_article, container, false);
 
         gridView = (GridView) root.findViewById(R.id.grid_article);
-        adapter = new Article_Item_Adapter(getActivity(), R.layout.article_item,  ((MainActivity)(getActivity())).getListArticle());
+        adapter = new Article_Item_Adapter(getActivity(), R.layout.article_item,  ((MainActivity)(getActivity())).getNews());
         gridView.setAdapter(adapter);
         FloatingActionButton button = (FloatingActionButton) root.findViewById(R.id.fab_create_article);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity)(getActivity())).switchFragment(new Fragment_CreateArticle());
+                ((MainActivity)(getActivity())).switchFragment(new ChooseTypeDialog());
             }
         });
 
@@ -129,7 +131,7 @@ public class ArticleFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position,
                                     long id) {
-                Article item = (Article) parent.getItemAtPosition(position);
+                News item = (News) parent.getItemAtPosition(position);
                 listener.onArticleClick(item);
             }
         });
@@ -161,21 +163,21 @@ public class ArticleFragment extends Fragment {
             for (int i = 0; i < feedArray.length(); i++) {
                 JSONObject feedObj = (JSONObject) feedArray.get(i);
 
-                Article item = new Article();
+                News item = new News();
 
                 item.setTitle(feedObj.getString("title"));
-                item.setRawLocation(feedObj.getString("location"));
-                item.setUser(feedObj.getString("user"));
-                item.setDescription(feedObj.getString("description"));
-                item.setCategory(feedObj.getString("category"));
-                item.setDate(feedObj.getString("date"));
+                //item.setRawLocation(feedObj.getString("location"));
+                item.setAuthor(feedObj.getString("user"));
+                item.setBody(feedObj.getString("description"));
+                //item.setCategory(feedObj.getString("category"));
+                item.setCreatedDate(feedObj.getString("date"));
 
                 // Image might be null sometimes
                 String image = feedObj.isNull("Urlimage") ? null : feedObj
                         .getString("Urlimage");
                 item.setUrlimage(image);
 
-                //// Check ID of Article Item to avoid duplication in gridView when switching fragment
+                //// Check ID of News Item to avoid duplication in gridView when switching fragment
                 ((MainActivity)(getActivity())).addArticle(item);
             }
 
