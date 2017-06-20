@@ -1,5 +1,7 @@
 package france.bosch.estelle.android_hotlemon.Class;
 
+import java.util.Date;
+
 /**
  * Created by ESTEL on 09/06/2017.
  */
@@ -7,7 +9,8 @@ package france.bosch.estelle.android_hotlemon.Class;
 public class Topic {
 
     private Long id;
-    protected String title, Author, Body, CreatedDate, PublishedDate;
+    protected String title, Author, Body;
+    Date CreatedDate, PublishedDate;
     int VoteFor, VoteAgainst;
     String urlImage;
 
@@ -51,19 +54,19 @@ public class Topic {
         Body = body;
     }
 
-    public String getCreatedDate() {
+    public Date getCreatedDate() {
         return CreatedDate;
     }
 
-    public void setCreatedDate(String createdDate) {
+    public void setCreatedDate(Date createdDate) {
         CreatedDate = createdDate;
     }
 
-    public String getPublishedDate() {
+    public Date getPublishedDate() {
         return PublishedDate;
     }
 
-    public void setPublishedDate(String publishedDate) {
+    public void setPublishedDate(Date publishedDate) {
         PublishedDate = publishedDate;
     }
     public int getVoteFor() {

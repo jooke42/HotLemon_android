@@ -2,15 +2,14 @@ package france.bosch.estelle.android_hotlemon.Fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-
 
 import com.android.volley.Cache;
 import com.android.volley.Request;
@@ -24,39 +23,36 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
 import france.bosch.estelle.android_hotlemon.Adapter.Article_Item_Adapter;
 import france.bosch.estelle.android_hotlemon.App.AppController;
-import france.bosch.estelle.android_hotlemon.Class.News;
 import france.bosch.estelle.android_hotlemon.Class.Topic;
 import france.bosch.estelle.android_hotlemon.Dialog.ChooseTypeDialog;
 import france.bosch.estelle.android_hotlemon.MainActivity;
 import france.bosch.estelle.android_hotlemon.R;
 
-public class ArticleFragment extends Fragment {
+/**
+ * Created by ESTEL on 20/06/2017.
+ */
 
-    public interface ArticleFragmentListener {
+public class FreshArticleFragment extends Fragment {
+
+    public interface FreshArticleFragmentListener {
         void onArticleClick(Topic news);
     }
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private String URL_FEED = "https://perso.esiee.fr/~pereirae/webe3fi/test.json";
+    private String URL_FEED_API = "http://82.232.20.224/news/";
     private GridView gridView;
     private Article_Item_Adapter adapter;
-    private ArticleFragmentListener listener;
+    private HotArticleFragment.HotArticleFragmentListener listener;
 
-    public ArticleFragment() {
+    public FreshArticleFragment() {
         // Required empty public constructor
     }
 
-    public static ArticleFragment newInstance() {
-        ArticleFragment fragment = new ArticleFragment();
-        return fragment;
-    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -85,7 +81,7 @@ public class ArticleFragment extends Fragment {
 
         // We first check for cached request
         Cache cache = AppController.getInstance().getRequestQueue().getCache();
-        Cache.Entry entry = cache.get(URL_FEED);
+        Cache.Entry entry = cache.get(URL_FEED_API);
         if (entry != null) {
             // fetch the data from cache
             try {
@@ -102,7 +98,7 @@ public class ArticleFragment extends Fragment {
         } else {
             // making fresh volley request and getting json
             JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.GET,
-                    URL_FEED, null, new Response.Listener<JSONObject>() {
+                    URL_FEED_API, null, new Response.Listener<JSONObject>() {
 
                 @Override
                 public void onResponse(JSONObject response) {
@@ -135,7 +131,7 @@ public class ArticleFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position,
                                     long id) {
-                News item = (News) parent.getItemAtPosition(position);
+                Topic item = (Topic) parent.getItemAtPosition(position);
                 listener.onArticleClick(item);
             }
         });
@@ -151,7 +147,7 @@ public class ArticleFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try{
-            listener = (ArticleFragmentListener) context;
+            listener = (HotArticleFragment.HotArticleFragmentListener) context;
         }catch (ClassCastException e){
             throw new ClassCastException(context.toString() + "must implement ArticleFragmentListener");
         }
@@ -162,39 +158,27 @@ public class ArticleFragment extends Fragment {
      * */
     private void parseJsonFeed(JSONObject response) {
         try {
-            JSONArray feedArray = response.getJSONArray("feed");
-
+            JSONArray feedArray = response.getJSONArray("results");
             for (int i = 0; i < feedArray.length(); i++) {
                 JSONObject feedObj = (JSONObject) feedArray.get(i);
 
-                News item = new News();
+                Topic item = new Topic();
 
                 item.setTitle(feedObj.getString("title"));
                 //item.setRawLocation(feedObj.getString("location"));
                 item.setAuthor(feedObj.getString("user"));
                 item.setBody(feedObj.getString("description"));
                 //item.setCategory(feedObj.getString("category"));
-                SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
-                Date date = Calendar.getInstance().getTime();
-                try {
-
-                    date = formatter.parse(feedObj.getString("date"));
-                    System.out.println(date);
-                    System.out.println(formatter.format(date));
-
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
+                //TODO change
                 //item.setCreatedDate(feedObj.getString("date"));
-                item.setCreatedDate(date);
 
                 // Image might be null sometimes
                 String image = feedObj.isNull("Urlimage") ? null : feedObj
                         .getString("Urlimage");
-                item.setUrlimage(image);
+                item.setUrlImage(image);
 
                 //// Check ID of News Item to avoid duplication in gridView when switching fragment
+
                 ((MainActivity)(getActivity())).addArticle(item);
             }
 

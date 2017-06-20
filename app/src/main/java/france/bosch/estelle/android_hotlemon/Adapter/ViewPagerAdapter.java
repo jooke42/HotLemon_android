@@ -7,8 +7,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import france.bosch.estelle.android_hotlemon.Fragments.FreshArticleFragment;
 import france.bosch.estelle.android_hotlemon.Fragments.HotArticleFragment;
-import france.bosch.estelle.android_hotlemon.Fragments.Three;
+import france.bosch.estelle.android_hotlemon.Fragments.TrendingArticleFragment;
 
 /**
  * Created by ESTEL on 18/05/2017.
@@ -28,9 +29,9 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         if (position == 0)
             return  new HotArticleFragment();
         if (position == 1)
-            return new Three();
+            return new TrendingArticleFragment();
         if (position == 2)
-            return new Three();
+            return new FreshArticleFragment();
 
         return null;
         //return mFragmentList.get(position);

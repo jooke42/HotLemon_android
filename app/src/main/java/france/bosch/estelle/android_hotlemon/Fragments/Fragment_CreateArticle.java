@@ -177,7 +177,8 @@ public class Fragment_CreateArticle extends Fragment {
         news.setAuthor("TODO");
         news.setBody(editDesc.getText().toString());
         //news.se("TODO");
-        news.setCreatedDate(formattedDate);
+        //TODO change
+       // news.setCreatedDate(formattedDate);
         if(selectedImage != null && selectedImage.getDrawable() != null)
             news.setImage(((BitmapDrawable)selectedImage.getDrawable()).getBitmap());
 

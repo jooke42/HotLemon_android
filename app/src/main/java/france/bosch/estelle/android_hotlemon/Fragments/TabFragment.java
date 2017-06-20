@@ -50,10 +50,10 @@ public class TabFragment extends Fragment {
 
     private  void setupViewPager(ViewPager viewPager) {
 
-        adapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager());
-        adapter.addFragment(Fragment.instantiate(getContext(), HotArticleFragment.class.getName()), "HOT");
-        adapter.addFragment(new Three(), "Trending");
-        adapter.addFragment(new Three(), "Fresh");
+        adapter = new ViewPagerAdapter(getChildFragmentManager());
+        adapter.addFragment(new HotArticleFragment(), "HOT");
+        adapter.addFragment(new TrendingArticleFragment(), "Trending");
+        adapter.addFragment(new FreshArticleFragment(), "Fresh");
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(0);
     }
@@ -66,13 +66,7 @@ public class TabFragment extends Fragment {
     }
 
 
-    public static ViewPager getviewPager() {
-            return viewPager;
-    }
 
-    public  static TabLayout getTabLayout() {
-        return tabLayout;
-    }
 
 }
 

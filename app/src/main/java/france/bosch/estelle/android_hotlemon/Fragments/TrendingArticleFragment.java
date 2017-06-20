@@ -2,15 +2,14 @@ package france.bosch.estelle.android_hotlemon.Fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-
 
 import com.android.volley.Cache;
 import com.android.volley.Request;
@@ -37,9 +36,12 @@ import france.bosch.estelle.android_hotlemon.Dialog.ChooseTypeDialog;
 import france.bosch.estelle.android_hotlemon.MainActivity;
 import france.bosch.estelle.android_hotlemon.R;
 
-public class ArticleFragment extends Fragment {
+/**
+ * Created by ESTEL on 20/06/2017.
+ */
 
-    public interface ArticleFragmentListener {
+public class TrendingArticleFragment extends Fragment {
+    public interface TrendingArticleListener {
         void onArticleClick(Topic news);
     }
 
@@ -47,14 +49,14 @@ public class ArticleFragment extends Fragment {
     private String URL_FEED = "https://perso.esiee.fr/~pereirae/webe3fi/test.json";
     private GridView gridView;
     private Article_Item_Adapter adapter;
-    private ArticleFragmentListener listener;
+    private TrendingArticleListener listener;
 
-    public ArticleFragment() {
+    public TrendingArticleFragment() {
         // Required empty public constructor
     }
 
-    public static ArticleFragment newInstance() {
-        ArticleFragment fragment = new ArticleFragment();
+    public static TrendingArticleFragment newInstance() {
+        TrendingArticleFragment fragment = new TrendingArticleFragment();
         return fragment;
     }
 
@@ -67,10 +69,10 @@ public class ArticleFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root;
-        root = inflater.inflate(R.layout.fragment_article, container, false);
+        root = inflater.inflate(R.layout.trending_article_fragment, container, false);
 
         gridView = (GridView) root.findViewById(R.id.grid_article);
-        adapter = new Article_Item_Adapter(getActivity(), R.layout.article_item,  ((MainActivity)(getActivity())).getNews());
+        adapter = new Article_Item_Adapter(getActivity(), R.layout.article_item,  ((MainActivity)(getActivity())).getTrendingList());
         gridView.setAdapter(adapter);
         FloatingActionButton button = (FloatingActionButton) root.findViewById(R.id.fab_create_article);
 
@@ -135,7 +137,7 @@ public class ArticleFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position,
                                     long id) {
-                News item = (News) parent.getItemAtPosition(position);
+                Topic item = (Topic) parent.getItemAtPosition(position);
                 listener.onArticleClick(item);
             }
         });
@@ -151,7 +153,7 @@ public class ArticleFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try{
-            listener = (ArticleFragmentListener) context;
+            listener = (TrendingArticleListener) context;
         }catch (ClassCastException e){
             throw new ClassCastException(context.toString() + "must implement ArticleFragmentListener");
         }
@@ -204,4 +206,5 @@ public class ArticleFragment extends Fragment {
             e.printStackTrace();
         }
     }
+
 }

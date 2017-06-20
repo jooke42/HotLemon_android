@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -34,6 +35,7 @@ import france.bosch.estelle.android_hotlemon.Fragments.Fragment_CreateArticle;
 import france.bosch.estelle.android_hotlemon.Fragments.Fragment_CreateEvent;
 import france.bosch.estelle.android_hotlemon.Fragments.HotArticleFragment;
 import france.bosch.estelle.android_hotlemon.Fragments.TabFragment;
+import france.bosch.estelle.android_hotlemon.Fragments.TrendingArticleFragment;
 import france.bosch.estelle.android_hotlemon.Helper.FragmentUtils;
 
 
@@ -43,30 +45,63 @@ public class MainActivity extends AppCompatActivity
         Fragment_CreateArticle.CreateArticleListener,
         FragmentUtils.ActivityForResultStarter,
         HotArticleFragment.HotArticleFragmentListener,
-        ChooseTypeDialog.ChooseTypeListener
+        ChooseTypeDialog.ChooseTypeListener,
+        TrendingArticleFragment.TrendingArticleListener
 {
     private SparseArray<Bundle> requests;
     private int PLACE_PICKER_REQUEST = 1;
     private RelativeLayout framelayout;
     private Topic currentNews;
     private ArrayList<Topic> newsList = new ArrayList<Topic>();
-    private ArrayList<Topic> freshList = new ArrayList<Topic>();
+    private ArrayList<Topic> HotList = new ArrayList<Topic>();
+    private ArrayList<Topic> TrendingList = new ArrayList<Topic>();
+    private ArrayList<Topic> FreshList = new ArrayList<Topic>();
     Calendar currentDate = Calendar.getInstance();
 
     public ArrayList<Topic> getNews() {
         return this.newsList;
     }
 
-  /*  public ArrayList<Topic> getFresh() {
+  public ArrayList<Topic> getFresh() {
         for (Topic t:newsList
              ) {
-            if(t.getCreatedDate() <= currentDate.getTime())
-                freshList.getClass()(t);
+           // if(t.getCreatedDate() <= currentDate.getTime())
+
+            if(!FreshList.contains(t))
+                FreshList.add(t);
 
         }
 
         return this.newsList;
-    }*/
+    }
+
+
+    public ArrayList<Topic> getHot() {
+        fillHotList();
+        return this.HotList;
+    }
+
+    private void fillHotList(){
+        for (Topic t:newsList)
+        {
+            if(t.getVote() >= 10 && !newsList.contains(t))
+                HotList.add(t);
+        }
+    }
+
+    public ArrayList<Topic> getTrendingList() {
+        fillTrendingList();
+        return this.TrendingList;
+    }
+
+    private void fillTrendingList(){
+        for (Topic t:newsList)
+        {
+            //if(t.getVote() >= 10)
+                TrendingList.add(t);
+        }
+    }
+
 
     public Topic getCurrentNews() {
         return currentNews;
@@ -77,7 +112,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void addArticle(Topic news){
-        newsList.add(news);
+        if(!newsList.contains(news))
+                newsList.add(news);
     }
 
     @Override
@@ -184,7 +220,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_camera) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
-            switchFragment(new ArticleFragment());
+            switchFragment(new TabFragment());
 
         } else if (id == R.id.nav_slideshow) {
             switchFragment(new EditProfilFragment());
@@ -218,6 +254,7 @@ public class MainActivity extends AppCompatActivity
         setCurrentNews(news);
         switchFragment(new ArticleDetailFragment());
     }
+
 
     public void isGPSEnable(){
         LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);

@@ -64,7 +64,7 @@ public class HotArticleFragment extends Fragment {
         root = inflater.inflate(R.layout.fragment_article, container, false);
 
         gridView = (GridView) root.findViewById(R.id.grid_article);
-        adapter = new Article_Item_Adapter(getActivity(), R.layout.article_item,  ((MainActivity)(getActivity())).getNews());
+        adapter = new Article_Item_Adapter(getActivity(), R.layout.article_item,  ((MainActivity)(getActivity())).getHot());
         gridView.setAdapter(adapter);
         FloatingActionButton button = (FloatingActionButton) root.findViewById(R.id.fab_create_article);
 
@@ -168,7 +168,8 @@ public class HotArticleFragment extends Fragment {
                 item.setAuthor(feedObj.getString("user"));
                 item.setBody(feedObj.getString("description"));
                 //item.setCategory(feedObj.getString("category"));
-                item.setCreatedDate(feedObj.getString("date"));
+                //TODO change
+                //item.setCreatedDate(feedObj.getString("date"));
 
                 // Image might be null sometimes
                 String image = feedObj.isNull("Urlimage") ? null : feedObj
@@ -176,6 +177,7 @@ public class HotArticleFragment extends Fragment {
                 item.setUrlImage(image);
 
                 //// Check ID of News Item to avoid duplication in gridView when switching fragment
+
                 ((MainActivity)(getActivity())).addArticle(item);
             }
 
