@@ -71,11 +71,12 @@ public class ArticleDetailFragment extends Fragment {
             imageLoader = AppController.getInstance().getImageLoader();
 
         ArticleImageView.setImageUrl(currentNews.getUrlImage(), imageLoader);
-        Date.setText(currentNews.getCreatedDate().toString());
+        //Date.setText(currentNews.getCreatedDate().toString());
         //Location.setText(currentNews.getRawLocation());
         User.setText(currentNews.getAuthor());
         Title.setText(currentNews.getTitle());
         Description.setText(currentNews.getBody());
+
         updateVote();
     }
 
@@ -101,8 +102,6 @@ public class ArticleDetailFragment extends Fragment {
 
     private void updateVote(){
         vote.setText(String.valueOf(currentTopic.getVote()));
-
-
 
     }
 

@@ -62,8 +62,10 @@ public class MainActivity extends AppCompatActivity
         return this.newsList;
     }
 
+
   public ArrayList<Topic> getFresh() {
-        for (Topic t:newsList
+
+         for (Topic t:newsList
              ) {
            // if(t.getCreatedDate() <= currentDate.getTime())
 
@@ -74,7 +76,6 @@ public class MainActivity extends AppCompatActivity
 
         return this.newsList;
     }
-
 
     public ArrayList<Topic> getHot() {
         fillHotList();
@@ -121,8 +122,8 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         // Start the Login Activity to log the current user
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
+        //Intent intent = new Intent(this, LoginActivity.class);
+        //startActivity(intent);
 
         if (savedInstanceState == null)
             this.requests = new SparseArray<Bundle>();
@@ -166,7 +167,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void startActivityForResultWhileSavingOrigin(int requestCode, Intent intent, int[] indices)
     {
-        //special method for start an activity for result.
+        //special method to start an activity for result.
 
         //we save the information about where this request comes from in a bundle and store it based on requestCode
         final Bundle bundle = new Bundle();
@@ -247,13 +248,18 @@ public class MainActivity extends AppCompatActivity
         ft.commit();
     }
 
-
+    public void showChooseTypeDialog() {
+        FragmentManager fm = getSupportFragmentManager();
+        ChooseTypeDialog chooseTypeDialog = ChooseTypeDialog.newInstance("Choose your type of article.");
+        chooseTypeDialog.show(fm, "dialog_choose_type");
+    }
 
     @Override
     public void onArticleClick(Topic news){
         setCurrentNews(news);
         switchFragment(new ArticleDetailFragment());
     }
+
 
 
     public void isGPSEnable(){
@@ -265,6 +271,7 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
         }
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -320,6 +327,7 @@ public class MainActivity extends AppCompatActivity
     public void onLocationChanged() {
 
     }
+
     @Override
     public void onChooseValidation(String type){
         if(type=="article")

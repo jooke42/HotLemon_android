@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Cache;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -23,9 +25,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
 import france.bosch.estelle.android_hotlemon.Adapter.Article_Item_Adapter;
 import france.bosch.estelle.android_hotlemon.App.AppController;
+import france.bosch.estelle.android_hotlemon.Class.News;
 import france.bosch.estelle.android_hotlemon.Class.Topic;
 import france.bosch.estelle.android_hotlemon.Dialog.ChooseTypeDialog;
 import france.bosch.estelle.android_hotlemon.MainActivity;
@@ -159,27 +164,74 @@ public class FreshArticleFragment extends Fragment {
     private void parseJsonFeed(JSONObject response) {
         try {
             JSONArray feedArray = response.getJSONArray("results");
-            for (int i = 0; i < feedArray.length(); i++) {
-                JSONObject feedObj = (JSONObject) feedArray.get(i);
 
-                Topic item = new Topic();
+            for (int i = 0; i < feedArray.length(); i++) {
+                final JSONObject feedObj = (JSONObject) feedArray.get(i);
+
+                final News item = new News();
 
                 item.setTitle(feedObj.getString("title"));
+
                 //item.setRawLocation(feedObj.getString("location"));
                 item.setAuthor(feedObj.getString("user"));
                 item.setBody(feedObj.getString("description"));
+                item.setVoteFor(feedObj.getInt("vote_for"));
+                item.setVoteAgainst(feedObj.getInt("vote_against"));
                 //item.setCategory(feedObj.getString("category"));
                 //TODO change
                 //item.setCreatedDate(feedObj.getString("date"));
 
+
+                //item.setAuthor(feedObj.getString("author"));
+                item.setBody(feedObj.getString("body"));
+
+
                 // Image might be null sometimes
-                String image = feedObj.isNull("Urlimage") ? null : feedObj
-                        .getString("Urlimage");
+                String image = feedObj.isNull("picture") ? null : feedObj
+                        .getString("picture");
                 item.setUrlImage(image);
+
+                // Request username from post
+                // making fresh volley request and getting json
+                JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.GET,
+                        feedObj.getString("author"), null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        VolleyLog.d(TAG, "Response: " + response.toString());
+                        Log.d(TAG, "Response: " + response.toString());
+
+                        if (response != null) {
+                            item.setAuthor(parseJsonUsername(response));
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        VolleyLog.d(TAG, "Error: " + error.getStackTrace());
+                        Log.d(TAG, "Error: " + error.getMessage());
+                    }
+                })  {
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        HashMap<String, String> headers = new HashMap<String, String>();
+                        headers.put("Content-Type", "application/json");
+                        headers.put("Authorization", "Token " + AppController.getInstance().getKeyToken());
+                        return headers;
+                    }
+                };
+
+
+                // Adding request to volley request queue
+                AppController.getInstance().addToRequestQueue(jsonReq);
 
                 //// Check ID of News Item to avoid duplication in gridView when switching fragment
 
                 ((MainActivity)(getActivity())).addArticle(item);
+
+
+
             }
 
             // notify data changes to list adapter
@@ -187,5 +239,22 @@ public class FreshArticleFragment extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    private String parseJsonUsername(JSONObject response) {
+        String feedUser = "";
+
+        try {
+            feedUser = response.getString("username");
+        }
+        catch(JSONException e) {
+            e.printStackTrace();
+        }
+
+        if (feedUser != null || feedUser != "") {
+            return feedUser;
+        }
+
+        return feedUser;
     }
 }

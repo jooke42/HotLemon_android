@@ -11,7 +11,7 @@ public class Topic {
     private Long id;
     protected String title, Author, Body;
     Date CreatedDate, PublishedDate;
-    int VoteFor, VoteAgainst;
+    int VoteFor, VoteAgainst, Vote;
     String urlImage;
 
     public String getUrlImage() {
@@ -93,6 +93,9 @@ public class Topic {
 
     public int getVote(){
         return VoteFor - VoteAgainst;
+    }
+    public void setVote(int vote){
+        this.Vote = vote;
     }
 }
 

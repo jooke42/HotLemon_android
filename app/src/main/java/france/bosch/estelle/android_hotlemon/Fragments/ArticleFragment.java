@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Cache;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -24,10 +26,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+
+import java.util.HashMap;
+import java.util.Map;
+
 
 import france.bosch.estelle.android_hotlemon.Adapter.Article_Item_Adapter;
 import france.bosch.estelle.android_hotlemon.App.AppController;
@@ -45,6 +47,7 @@ public class ArticleFragment extends Fragment {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private String URL_FEED = "https://perso.esiee.fr/~pereirae/webe3fi/test.json";
+    private String URL_FEED_GET = "http://82.232.20.224/news/";
     private GridView gridView;
     private Article_Item_Adapter adapter;
     private ArticleFragmentListener listener;
@@ -77,15 +80,16 @@ public class ArticleFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity)(getActivity())).switchFragment(new ChooseTypeDialog());
+                ((MainActivity)(getActivity())).showChooseTypeDialog();
             }
         });
 
         /// Code added to test JSON requests and article feed (and it works mf !) ///
 
         // We first check for cached request
+        adapter.clear();
         Cache cache = AppController.getInstance().getRequestQueue().getCache();
-        Cache.Entry entry = cache.get(URL_FEED);
+        Cache.Entry entry = cache.get(URL_FEED_GET);
         if (entry != null) {
             // fetch the data from cache
             try {
@@ -102,11 +106,12 @@ public class ArticleFragment extends Fragment {
         } else {
             // making fresh volley request and getting json
             JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.GET,
-                    URL_FEED, null, new Response.Listener<JSONObject>() {
+                    URL_FEED_GET, null, new Response.Listener<JSONObject>() {
 
                 @Override
                 public void onResponse(JSONObject response) {
                     VolleyLog.d(TAG, "Response: " + response.toString());
+                    Log.d(TAG, "Response: " + response.toString());
                     if (response != null) {
                         parseJsonFeed(response);
                     }
@@ -116,8 +121,17 @@ public class ArticleFragment extends Fragment {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
+                    Log.d(TAG, "Error: " + error.getMessage());
                 }
-            });
+            }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap<String, String> headers = new HashMap<String, String>();
+                    headers.put("Content-Type", "application/json");
+                    headers.put("Authorization", "Token " + AppController.getInstance().getKeyToken());
+                    return headers;
+                }
+            };
 
             // Adding request to volley request queue
             AppController.getInstance().addToRequestQueue(jsonReq);
@@ -162,14 +176,14 @@ public class ArticleFragment extends Fragment {
      * */
     private void parseJsonFeed(JSONObject response) {
         try {
-            JSONArray feedArray = response.getJSONArray("feed");
+            JSONArray feedArray = response.getJSONArray("results");
 
             for (int i = 0; i < feedArray.length(); i++) {
                 JSONObject feedObj = (JSONObject) feedArray.get(i);
 
-                News item = new News();
+                Topic item = new Topic();
 
-                item.setTitle(feedObj.getString("title"));
+                /*item.setTitle(feedObj.getString("title"));
                 //item.setRawLocation(feedObj.getString("location"));
                 item.setAuthor(feedObj.getString("user"));
                 item.setBody(feedObj.getString("description"));
@@ -192,10 +206,22 @@ public class ArticleFragment extends Fragment {
                 // Image might be null sometimes
                 String image = feedObj.isNull("Urlimage") ? null : feedObj
                         .getString("Urlimage");
-                item.setUrlimage(image);
+                item.setUrlimage(image);*/
+
+                item.setTitle(feedObj.getString("title"));
+                //item.setRawLocation(feedObj.getString("location"));
+                item.setAuthor(feedObj.getString("author"));
+                item.setBody(feedObj.getString("body"));
+                //item.setCategory(feedObj.getString("category"));
+                //item.setCreatedDate(feedObj.getString("date"));
+
+                // Image might be null sometimes
+                String image = feedObj.isNull("picture") ? null : feedObj
+                        .getString("picture");
+                item.setUrlImage(image);
 
                 //// Check ID of News Item to avoid duplication in gridView when switching fragment
-                ((MainActivity)(getActivity())).addArticle(item);
+               // ((MainActivity)(getActivity())).addArticle(item);
             }
 
             // notify data changes to list adapter
