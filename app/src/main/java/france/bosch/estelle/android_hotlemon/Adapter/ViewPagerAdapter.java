@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import france.bosch.estelle.android_hotlemon.Fragments.ArticleFragment;
 import france.bosch.estelle.android_hotlemon.Fragments.HotArticleFragment;
 import france.bosch.estelle.android_hotlemon.Fragments.Three;
 

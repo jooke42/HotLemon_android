@@ -37,9 +37,6 @@ public class Fragment_CreateEvent extends Fragment{
     private int PLACE_PICKER_REQUEST = 1;
     private Place selectedPlace;
 
-
-
-
     public static Fragment_CreateArticle newInstance() {
         Fragment_CreateArticle fragment = new Fragment_CreateArticle();
         return fragment;
@@ -107,12 +104,12 @@ public class Fragment_CreateEvent extends Fragment{
         } catch (GooglePlayServicesNotAvailableException e) {
             e.printStackTrace();
         }
-        isGPSEnable();
+        isGPSEnabled();
 
 
     }
 
-    public void isGPSEnable(){
+    public void isGPSEnabled(){
         LocationManager service = (LocationManager) getActivity().getSystemService(getActivity().LOCATION_SERVICE);
         boolean enabled = service
                 .isProviderEnabled(LocationManager.GPS_PROVIDER);

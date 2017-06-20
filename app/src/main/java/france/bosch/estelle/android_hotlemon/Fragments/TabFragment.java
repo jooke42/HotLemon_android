@@ -30,9 +30,6 @@ public class TabFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
     }
 
     @Override
@@ -50,7 +47,7 @@ public class TabFragment extends Fragment {
 
     private  void setupViewPager(ViewPager viewPager) {
 
-        adapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager());
+        adapter = new ViewPagerAdapter(getChildFragmentManager());
         adapter.addFragment(Fragment.instantiate(getContext(), HotArticleFragment.class.getName()), "HOT");
         adapter.addFragment(new Three(), "Trending");
         adapter.addFragment(new Three(), "Fresh");

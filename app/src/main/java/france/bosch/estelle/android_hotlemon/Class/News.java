@@ -18,10 +18,6 @@ public class News extends Topic{
     Place location;
     Bitmap image;
 
-
-
-
-
     public String getUrlimage() {
         return UrlImage;
     }
@@ -34,10 +30,9 @@ public class News extends Topic{
 
     public void setImage(Bitmap image) { this.image = image; }
 
-    public News(){
-
+    public News()
+    {
         this.location = null;
-
     }
 
     public News(String title, String user, Place location){

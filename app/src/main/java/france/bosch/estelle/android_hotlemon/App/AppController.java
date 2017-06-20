@@ -20,7 +20,9 @@ public class AppController extends Application {
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
 
+    // Global variables, useful for requests (unfortunately it's a bad way of coding)
     private String key;
+    private String userLogin;
 
     private static AppController mInstance;
 
@@ -68,11 +70,14 @@ public class AppController extends Application {
         }
     }
 
+    // Mandatory for request implementation (at the moment...)
     public void setKeyToken(String _key) {
         this.key = _key;
     }
 
-    public String getKeyToken() {
-        return this.key;
-    }
+    public String getKeyToken() { return this.key; }
+
+    public void setUserLogin(String userLogin) { this.userLogin = userLogin; }
+
+    public String getUserLogin() { return userLogin; }
 }

@@ -1,6 +1,7 @@
 package france.bosch.estelle.android_hotlemon.Fragments;
 
 
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -22,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
@@ -40,8 +42,11 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Map;
 
 import france.bosch.estelle.android_hotlemon.App.AppController;
+import france.bosch.estelle.android_hotlemon.Class.Topic;
+import france.bosch.estelle.android_hotlemon.LoginActivity;
 import france.bosch.estelle.android_hotlemon.R;
 import france.bosch.estelle.android_hotlemon.MainActivity;
 import france.bosch.estelle.android_hotlemon.Class.News;
@@ -54,8 +59,6 @@ import static android.app.Activity.RESULT_OK;
 
 public class Fragment_CreateArticle extends Fragment {
 
-
-
     public interface CreateArticleListener {
         void onSelectImage();
         void onLocationChanged();
@@ -64,8 +67,8 @@ public class Fragment_CreateArticle extends Fragment {
 
     // Global variables used for HTTP requests
     private static final String TAG = MainActivity.class.getSimpleName();
-    private String URL_FEED = "https://perso.esiee.fr/~pereirae/webe3fi/test.json";
-    private String URL_FEED_POST = ""; // Marteaux's RaspberryPI URL
+    private String URL_FEED = "https://perso.esiee.fr/~pereirae/webe3fi/test.json"; // Deprecated
+    private String URL_FEED_POST = "http://82.232.20.224/news/"; // Marteaux's RaspberryPI URL
     private int PLACE_PICKER_REQUEST = 1;
     private Bitmap toretBitmap;
     // Internal variables
@@ -110,7 +113,7 @@ public class Fragment_CreateArticle extends Fragment {
         });
     }
 
-    public void isGPSEnable(){
+    public void isGPSEnabled(){
         LocationManager service = (LocationManager) getActivity().getSystemService(getActivity().LOCATION_SERVICE);
         boolean enabled = service
                 .isProviderEnabled(LocationManager.GPS_PROVIDER);
@@ -144,7 +147,7 @@ public class Fragment_CreateArticle extends Fragment {
             selectedPlace = place;
         }
 
-        if(resultCode == RESULT_OK){
+        if (resultCode == RESULT_OK){
             try {
                 InputStream IS = getContext().getContentResolver().openInputStream(data.getData());
                 toretBitmap = BitmapFactory.decodeStream(IS);
@@ -155,8 +158,6 @@ public class Fragment_CreateArticle extends Fragment {
                 e.printStackTrace();
             }
         }
-
-
     }
 
     private void Add_OnClick()
@@ -174,9 +175,8 @@ public class Fragment_CreateArticle extends Fragment {
         News news = new News();
         news.setTitle(titre.getText().toString());
        // news.setLocation(selectedPlace);
-        news.setAuthor("TODO");
+        news.setAuthor(AppController.getInstance().getUserLogin());
         news.setBody(editDesc.getText().toString());
-        //news.se("TODO");
         news.setCreatedDate(formattedDate);
         if(selectedImage != null && selectedImage.getDrawable() != null)
             news.setImage(((BitmapDrawable)selectedImage.getDrawable()).getBitmap());
@@ -188,11 +188,11 @@ public class Fragment_CreateArticle extends Fragment {
         HashMap<String, Object> params = new HashMap<>();
         params.put("title", news.getTitle());
        // params.put("location", news.getRawLocation());
-        params.put("user", news.getAuthor());
-        params.put("description", news.getBody());
+        params.put("author", news.getAuthor());
+        params.put("body", news.getBody());
         //params.put("category", news.getCategory());
-        params.put("date", news.getCreatedDate());
-        params.put("image", news.getImage());
+        //params.put("date", news.getCreatedDate());
+        params.put("picture", news.getImage());
 
         // try to send a POST HTTP Request with previous JSONObject in parameter
         JsonObjectRequest req = new JsonObjectRequest(URL_FEED_POST, new JSONObject(params),
@@ -208,9 +208,17 @@ public class Fragment_CreateArticle extends Fragment {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                VolleyLog.e("Error: ", error.getMessage());
+                VolleyLog.e("Error: ", error.getStackTrace());
             }
-        });
+        })  {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                headers.put("Authorization", "Token " + AppController.getInstance().getKeyToken());
+                return headers;
+            }
+        };
 
         // add the request object to the queue to be executed
         AppController.getInstance().addToRequestQueue(req);
@@ -230,7 +238,7 @@ public class Fragment_CreateArticle extends Fragment {
             e.printStackTrace();
         }
 
-        isGPSEnable();
+        isGPSEnabled();
     }
 
     private void Select_OnClick()
@@ -238,10 +246,6 @@ public class Fragment_CreateArticle extends Fragment {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         startActivityForResult(intent, 0);
-    }
-
-    private void feedJSONObject() {
-
     }
 
     @Override

@@ -37,6 +37,7 @@ public class LoginActivity extends AppCompatActivity {
     private static final int REQUEST_SIGNUP = 0;
 
     private String key = "";
+    private String userLogin = "";
 
     @InjectView(R.id.input_username) EditText _usernameText;
     @InjectView(R.id.input_password) EditText _passwordText;
@@ -87,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
         String password = _passwordText.getText().toString();
 
         // // Set new Utilisateur to be converted as JSON Object
-        Utilisateur user = new Utilisateur();
+        final Utilisateur user = new Utilisateur();
         user.setUsername(username);
         user.setPassword(password);
 
@@ -104,9 +105,12 @@ public class LoginActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         try {
                             key = response.getString("key");
+                            userLogin = user.getUsername();
+                            AppController.getInstance().setUserLogin(userLogin);
                             AppController.getInstance().setKeyToken(key);
                             VolleyLog.v("Response:%n %s", response.toString(4));
                             Log.v("Response:%n %s", response.toString(4));
+
                             onLoginSuccess();
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -162,7 +166,8 @@ public class LoginActivity extends AppCompatActivity {
 
     public void onLoginSuccess() {
         _loginButton.setEnabled(true);
-        finish();
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     public void onLoginFailed() {
