@@ -20,7 +20,6 @@ public class ArticleDetailFragment extends Fragment {
     private TextView Date;
 
     private TextView User;
-    private TextView Category;
     private TextView Title;
     private TextView Description;
     private ImageLoader imageLoader;
@@ -50,7 +49,6 @@ public class ArticleDetailFragment extends Fragment {
         Date = (TextView) root.findViewById(R.id.date);
 
         User = (TextView) root.findViewById(R.id.user);
-      //  Category = (TextView) root.findViewById(R.id.category);
         Title = (TextView) root.findViewById(R.id.titre);
         Description = (TextView) root.findViewById(R.id.article_description);
         voteFor = (FloatingActionButton) root.findViewById(R.id.voteFor);
@@ -76,7 +74,8 @@ public class ArticleDetailFragment extends Fragment {
         User.setText(currentNews.getAuthor());
         Title.setText(currentNews.getTitle());
         Description.setText(currentNews.getBody());
-        place.setText(currentNews.getLocation().getName());
+        if(currentNews.getLocation() != null)
+        place.setText(currentNews.getAddress().getAddressLine(0));
 
         updateVote();
     }

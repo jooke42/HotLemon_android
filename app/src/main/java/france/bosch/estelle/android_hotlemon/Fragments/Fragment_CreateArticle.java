@@ -36,8 +36,7 @@ public class Fragment_CreateArticle extends Fragment{
     private TextView Location;
     private int PLACE_PICKER_REQUEST = 1;
     private Place selectedPlace;
-    private double longitude, latitude;
-    private Bitmap toretBitmap;
+
 
 
     public Fragment_CreateArticle() {

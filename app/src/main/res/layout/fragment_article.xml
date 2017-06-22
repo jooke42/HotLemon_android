@@ -10,15 +10,15 @@
     android:id="@+id/fragment_article_container">
 
     <GridView
+        android:id="@+id/grid_article"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:id="@+id/grid_article"
         android:layout_above="@+id/fab_create_article"
         android:layout_alignParentStart="true"
         android:layout_marginBottom="12dp"
-        android:numColumns="2"
         android:horizontalSpacing="10dp"
-        android:verticalSpacing="10dp"/>
+        android:numColumns="2"
+        android:verticalSpacing="10dp" />
 
     <android.support.design.widget.FloatingActionButton
         android:layout_width="67dp"

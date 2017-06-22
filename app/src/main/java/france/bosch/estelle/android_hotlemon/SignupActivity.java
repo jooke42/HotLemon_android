@@ -104,6 +104,7 @@ public class SignupActivity extends AppCompatActivity {
                             VolleyLog.v("Response:%n %s", response.toString(4));
                             Log.v("Response:%n %s", response.toString(4));
                             onSignupSuccess();
+                            progressDialog.dismiss();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -145,6 +146,7 @@ public class SignupActivity extends AppCompatActivity {
         Toast.makeText(getBaseContext(), "Sign up succeeded", Toast.LENGTH_LONG).show();
 
         _signupButton.setEnabled(true);
+
         finish();
     }
 

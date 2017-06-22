@@ -14,10 +14,13 @@ import android.widget.GridView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Cache;
+import com.android.volley.NetworkResponse;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONArray;
@@ -26,6 +29,7 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import france.bosch.estelle.android_hotlemon.Adapter.Article_Item_Adapter;
@@ -38,7 +42,7 @@ import france.bosch.estelle.android_hotlemon.R;
  * Created by ESTEL on 21/06/2017.
  */
 
-public class EventFragment extends Fragment {
+public class MyArticleFragment extends Fragment {
     public interface NewsFragmentListener {
         void onArticleClick(Topic news);
     }
@@ -49,8 +53,9 @@ public class EventFragment extends Fragment {
     private GridView gridView;
     private Article_Item_Adapter adapter;
     private NewsFragmentListener listener;
+    private List<Topic> topics;
 
-    public EventFragment() {
+    public MyArticleFragment() {
         // Required empty public constructor
     }
 
@@ -61,32 +66,32 @@ public class EventFragment extends Fragment {
     }
 
     @Nullable
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root;
         root = inflater.inflate(R.layout.fragment_article, container, false);
 
         gridView = (GridView) root.findViewById(R.id.grid_article);
+        topics = ((MainActivity)(getActivity())).getMyArticleList();
 
-        adapter = new Article_Item_Adapter(getActivity(), R.layout.article_item,  ((MainActivity)(getActivity())).getNews());
-        gridView.setAdapter(null);
-
+        adapter = new Article_Item_Adapter(getActivity(),topics);
         gridView.setAdapter(adapter);
+
         FloatingActionButton button = (FloatingActionButton) root.findViewById(R.id.fab_create_article);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity)(getActivity())).showChooseTypeDialog();
+                ((MainActivity)(getActivity())).switchFragment(new Fragment_CreateArticle());
             }
         });
 
         /// Code added to test JSON requests and article feed (and it works mf !) ///
 
         // We first check for cached request
-        adapter.clear();
+        // adapter.clear();
         Cache cache = AppController.getInstance().getRequestQueue().getCache();
         Cache.Entry entry = cache.get(URL_FEED_GET);
+
         if (entry != null) {
             // fetch the data from cache
             try {
@@ -110,7 +115,7 @@ public class EventFragment extends Fragment {
                     VolleyLog.d(TAG, "Response: " + response.toString());
                     Log.d(TAG, "Response: " + response.toString());
                     if (response != null) {
-                        parseJsonFeed(response);
+                        //parseJsonFeed(response);
                     }
                 }
             }, new Response.ErrorListener() {
@@ -120,7 +125,46 @@ public class EventFragment extends Fragment {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
                     Log.d(TAG, "Error: " + error.getMessage());
                 }
-            })  {
+            }) {
+                @Override
+                protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+                    try {
+                        Cache.Entry cacheEntry = HttpHeaderParser.parseCacheHeaders(response);
+                        if (cacheEntry == null) {
+                            cacheEntry = new Cache.Entry();
+                        }
+                        final long cacheHitButRefreshed = 2 * 60 * 1000; // in 3 minutes cache will be hit, but also refreshed on background
+                        final long cacheExpired = 24 * 60 * 60 * 1000; // in 24 hours this cache entry expires completely
+                        long now = System.currentTimeMillis();
+                        final long softExpire = now + cacheHitButRefreshed;
+                        final long ttl = now + cacheExpired;
+                        cacheEntry.data = response.data;
+                        cacheEntry.softTtl = softExpire;
+                        cacheEntry.ttl = ttl;
+                        String headerValue;
+                        headerValue = response.headers.get("Date");
+
+                        if (headerValue != null) {
+                            cacheEntry.serverDate = HttpHeaderParser.parseDateAsEpoch(headerValue);
+                        }
+
+                        headerValue = response.headers.get("Last-Modified");
+                        if (headerValue != null) {
+                            cacheEntry.lastModified = HttpHeaderParser.parseDateAsEpoch(headerValue);
+                        }
+
+                        cacheEntry.responseHeaders = response.headers;
+                        final String jsonString = new String(response.data,
+                                HttpHeaderParser.parseCharset(response.headers));
+
+                        return Response.success(new JSONObject(jsonString), cacheEntry);
+                    } catch (UnsupportedEncodingException e) {
+                        return Response.error(new ParseError(e));
+                    } catch (JSONException e) {
+                        return Response.error(new ParseError(e));
+                    }
+                }
+
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
                     HashMap<String, String> headers = new HashMap<String, String>();
@@ -132,8 +176,8 @@ public class EventFragment extends Fragment {
 
             // Adding request to volley request queue
             AppController.getInstance().addToRequestQueue(jsonReq);
+            //}
         }
-
         return root;
     }
 
@@ -180,15 +224,15 @@ public class EventFragment extends Fragment {
 
                 final Topic item = new Topic();
                 item.setTitle(feedObj.getString("title"));
-                //item.setVoteFor(feedObj.getInt("vote_for"));
-               // item.setVoteAgainst(feedObj.getInt("vote_against"));
+                item.setVoteFor(feedObj.getInt("vote_for"));
+                item.setVoteAgainst(feedObj.getInt("vote_against"));
                 item.setBody(feedObj.getString("body"));
 
 
                 // Image might be null sometimes
-                /*String image = feedObj.isNull("picture") ? null : feedObj
+                String image = feedObj.isNull("picture") ? null : feedObj
                         .getString("picture");
-                item.setUrlImage(image);*/
+                item.setUrlImage(image);
 
                 // Request username from post
                 // making fresh volley request and getting json
@@ -202,6 +246,8 @@ public class EventFragment extends Fragment {
 
                         if (response != null) {
                             item.setAuthor(parseJsonUsername(response));
+
+
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -225,10 +271,9 @@ public class EventFragment extends Fragment {
                 // Adding request to volley request queue
                 AppController.getInstance().addToRequestQueue(jsonReq);
 
-                //// Check ID of News Item to avoid duplication in gridView when switching fragment
 
-                ((MainActivity)(getActivity())).addEvent(item);
-
+                if (AppController.getInstance().getUserURL() == feedObj.getString("title"))
+                    ((MainActivity) (getActivity())).addMyArticleLis(item);
 
 
             }

@@ -1,6 +1,8 @@
 package france.bosch.estelle.android_hotlemon.Fragments;
 
 import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.annotation.Nullable;
@@ -30,7 +32,10 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 
@@ -52,6 +57,7 @@ public class ArticleFragment extends Fragment {
     private GridView gridView;
     private Article_Item_Adapter adapter;
     private ArticleFragmentListener listener;
+    private List<Topic> topics;
 
     public ArticleFragment() {
         // Required empty public constructor
@@ -74,24 +80,23 @@ public class ArticleFragment extends Fragment {
         root = inflater.inflate(R.layout.fragment_article, container, false);
 
         gridView = (GridView) root.findViewById(R.id.grid_article);
-
-        adapter = new Article_Item_Adapter(getActivity(), R.layout.article_item,  ((MainActivity)(getActivity())).getNews());
+        topics = ((MainActivity)(getActivity())).getNews();
+        adapter = new Article_Item_Adapter(getActivity(),topics);
         gridView.setAdapter(null);
-
         gridView.setAdapter(adapter);
         FloatingActionButton button = (FloatingActionButton) root.findViewById(R.id.fab_create_article);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity)(getActivity())).showChooseTypeDialog();
+                ((MainActivity)(getActivity())).switchFragment(new Fragment_CreateArticle());
             }
         });
 
         /// Code added to test JSON requests and article feed (and it works mf !) ///
 
         // We first check for cached request
-        adapter.clear();
+
         /*Cache cache = AppController.getInstance().getRequestQueue().getCache();
         Cache.Entry entry = cache.get(URL_FEED_GET);
         if (entry != null) {
@@ -187,14 +192,24 @@ public class ArticleFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         //list item click
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+       /* gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position,
                                     long id) {
                 Topic item = (Topic) parent.getItemAtPosition(position);
                 listener.onArticleClick(item);
             }
+        });*/
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView parent, View view, int position, long id) {
+                Topic topic = topics.get(position);
+                listener.onArticleClick(topic);
+                //booksAdapter.notifyDataSetChanged();
+            }
         });
+
+
     }
 
     @Override
@@ -227,8 +242,29 @@ public class ArticleFragment extends Fragment {
 
                 item.setTitle(feedObj.getString("title"));
                 item.setBody(feedObj.getString("body"));
-                // item.setVoteFor(feedObj.getInt("vote_for"));
-                // item.setVoteAgainst(feedObj.getInt("vote_against"));
+                item.setVoteFor(feedObj.getInt("vote_for"));
+                item.setVoteAgainst(feedObj.getInt("vote_against"));
+       /*         if (feedObj.getString("longitude") != "null")
+                    item.setlongitude(Double.parseDouble(feedObj.getString("longitude")));
+                if (feedObj.getString("latitude") != "null")
+                    item.setLatitude(Double.parseDouble(feedObj.getString("latitude")));
+                Geocoder geocoder;
+                List<Address> addresses = new ArrayList<>();
+                if (item.getLatitude() != null && item.getlongitude() != null) {
+                    geocoder = new Geocoder(((getActivity())), Locale.getDefault());
+                    try {
+                        addresses = geocoder.getFromLocation(item.getLatitude(), item.getlongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+
+                    } catch (Exception e) {
+
+                    }
+
+                    if (addresses.size() != 0) {
+                        Address address = addresses.get(0);//.getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+                        item.setAddress(address);
+                    }
+                }
+*/
                 //TODO change
                 //item.setCreatedDate(feedObj.getString("date"));
                 // Image might be null sometimes
@@ -272,8 +308,8 @@ public class ArticleFragment extends Fragment {
                 AppController.getInstance().addToRequestQueue(jsonReq);
 
                 //// Check ID of News Item to avoid duplication in gridView when switching fragment
-
-                ((MainActivity)(getActivity())).addNews(item);
+                if( !((MainActivity)(getActivity())).getNews().contains(item))
+                 ((MainActivity)(getActivity())).addNews(item);
 
 
 
@@ -301,4 +337,5 @@ public class ArticleFragment extends Fragment {
 
         return feedUser;
     }
+
 }

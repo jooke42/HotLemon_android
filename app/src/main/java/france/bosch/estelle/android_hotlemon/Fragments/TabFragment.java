@@ -51,7 +51,7 @@ public class TabFragment extends Fragment {
 
         adapter.addFragment(new HotArticleFragment(), "HOT");
         adapter.addFragment(new ArticleFragment(), "News");
-        adapter.addFragment(new EventFragment(), "Event");
+        adapter.addFragment(new MyArticleFragment(), "My Article");
 
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(0);

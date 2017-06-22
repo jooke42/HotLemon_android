@@ -22,14 +22,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import france.bosch.estelle.android_hotlemon.Class.Topic;
-import france.bosch.estelle.android_hotlemon.Dialog.ChooseTypeDialog;
 import france.bosch.estelle.android_hotlemon.Fragments.ArticleDetailFragment;
 import france.bosch.estelle.android_hotlemon.Fragments.ArticleFragment;
 import france.bosch.estelle.android_hotlemon.Fragments.EditProfilFragment;
 import france.bosch.estelle.android_hotlemon.Fragments.Fragment_CreateArticle;
-import france.bosch.estelle.android_hotlemon.Fragments.Fragment_CreateEvent;
 import france.bosch.estelle.android_hotlemon.Fragments.HotArticleFragment;
-import france.bosch.estelle.android_hotlemon.Fragments.EventFragment;
+import france.bosch.estelle.android_hotlemon.Fragments.MyArticleFragment;
 import france.bosch.estelle.android_hotlemon.Fragments.TabFragment;
 import france.bosch.estelle.android_hotlemon.Helper.FragmentUtils;
 
@@ -39,14 +37,27 @@ public class MainActivity extends AppCompatActivity
         ArticleFragment.ArticleFragmentListener,
         FragmentUtils.ActivityForResultStarter,
         HotArticleFragment.HotArticleFragmentListener,
-        ChooseTypeDialog.ChooseTypeListener,
-        EventFragment.NewsFragmentListener
+        MyArticleFragment.NewsFragmentListener
 {
     private SparseArray<Bundle> requests;
     private RelativeLayout framelayout;
     private Topic currentNews;
     private ArrayList<Topic> newsList = new ArrayList<Topic>();
     private ArrayList<Topic> HotList = new ArrayList<Topic>();
+    private ArrayList<Topic> myArticleList = new ArrayList<Topic>();
+
+    public ArrayList<Topic> getMyArticleList() {
+        return myArticleList;
+    }
+
+    public void setMyArticleList(ArrayList<Topic> myArticleList) {
+        this.myArticleList = myArticleList;
+    }
+    public void addMyArticleLis(Topic topic){
+        myArticleList.add(topic);
+    }
+
+
 
     private ArrayList<Topic> eventList = new ArrayList<Topic>();
 
@@ -221,11 +232,7 @@ public class MainActivity extends AppCompatActivity
         ft.commit();
     }
 
-    public void showChooseTypeDialog() {
-        FragmentManager fm = getSupportFragmentManager();
-        ChooseTypeDialog chooseTypeDialog = ChooseTypeDialog.newInstance("Choose your type of article.");
-        chooseTypeDialog.show(fm, "dialog_choose_type");
-    }
+
 
     @Override
     public void onArticleClick(Topic news){
@@ -286,11 +293,5 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    @Override
-    public void onChooseValidation(String type){
-        if(type=="article")
-            switchFragment(new Fragment_CreateArticle());
-        if(type=="event")
-            switchFragment(new Fragment_CreateEvent());
-    }
+
 }

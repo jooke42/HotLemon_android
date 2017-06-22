@@ -110,7 +110,7 @@ public class LoginActivity extends AppCompatActivity {
                             AppController.getInstance().setKeyToken(key);
                             VolleyLog.v("Response:%n %s", response.toString(4));
                             Log.v(TAG, "Response: " + response.toString());
-
+                            progressDialog.dismiss();
                             onLoginSuccess();
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -134,7 +134,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // add the request object to the queue to be executed
         AppController.getInstance().addToRequestQueue(req);
-        progressDialog.dismiss();
+
 
         // WUT ?
         /*new android.os.Handler().postDelayed(new Runnable() {

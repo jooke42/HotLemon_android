@@ -5,6 +5,7 @@ import com.google.android.gms.location.places.Place;
 import java.util.Date;
 
 import android.graphics.Bitmap;
+import android.location.Address;
 
 
 /**
@@ -19,40 +20,53 @@ public class Topic {
     protected String title, Author, Body;
     String CreatedDate, PublishedDate;
     int VoteFor, VoteAgainst, Vote;
-    double longitude,latitude;
+    Double longitude,latitude;
     Place location;
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    Address address;
+
 
     public Topic(){
         this.title = "";
         this.Author = null;
         this.location = null;
-        this.longitude = 0;
-        this.latitude = 0;
+        this.longitude = 0.0;
+        this.latitude =0.0;
     }
     public Topic(String title, String user, Place location){
         this.title = title;
         this.Author = user;
-        this.location = location;
-        this.longitude = location.getLatLng().longitude;
-        this.latitude = location.getLatLng().latitude;
+        if(location != null) {
+            this.location = location;
+            this.longitude = location.getLatLng().longitude;
+            this.latitude = location.getLatLng().latitude;
+        }
     }
 
-    public double getLongtitude() {
+    public Double getlongitude() {
         return longitude;
     }
     public Place getLocation(){
         return location;
     }
 
-    public void setLongtitude(double longtitude) {
+    public void setlongitude(Double longtitude) {
         this.longitude = longtitude;
     }
 
-    public double getLatitude() {
+    public Double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(double latitude) {
+    public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
