@@ -1,5 +1,7 @@
 package france.bosch.estelle.android_hotlemon.Class;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by ESTEL on 09/06/2017.
  */
@@ -10,6 +12,11 @@ public class Topic {
     protected String title, Author, Body, CreatedDate, PublishedDate;
     int VoteFor, VoteAgainst;
     String urlImage;
+    Bitmap image;
+
+    public Bitmap getImage() { return image; }
+
+    public void setImage(Bitmap image) { this.image = image; }
 
     public String getUrlImage() {
         return urlImage;

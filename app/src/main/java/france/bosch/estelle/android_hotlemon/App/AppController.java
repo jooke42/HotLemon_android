@@ -23,6 +23,7 @@ public class AppController extends Application {
     // Global variables, useful for requests (unfortunately it's a bad way of coding)
     private String key;
     private String userLogin;
+    private String userURL;
 
     private static AppController mInstance;
 
@@ -80,4 +81,8 @@ public class AppController extends Application {
     public void setUserLogin(String userLogin) { this.userLogin = userLogin; }
 
     public String getUserLogin() { return userLogin; }
+
+    public void setUserURL(String userURL) { this.userURL = userURL; }
+
+    public String getUserURL() { return userURL; }
 }

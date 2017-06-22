@@ -15,6 +15,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
@@ -44,6 +46,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import france.bosch.estelle.android_hotlemon.Adapter.Article_Item_Adapter;
 import france.bosch.estelle.android_hotlemon.App.AppController;
 import france.bosch.estelle.android_hotlemon.Class.Topic;
 import france.bosch.estelle.android_hotlemon.LoginActivity;
@@ -68,9 +71,10 @@ public class Fragment_CreateArticle extends Fragment {
     // Global variables used for HTTP requests
     private static final String TAG = MainActivity.class.getSimpleName();
     private String URL_FEED = "https://perso.esiee.fr/~pereirae/webe3fi/test.json"; // Deprecated
-    private String URL_FEED_POST = "http://82.232.20.224/news/"; // Marteaux's RaspberryPI URL
+    private String URL_FEED_POST = "http://82.232.20.224/topics/"; // Marteaux's RaspberryPI URL
     private int PLACE_PICKER_REQUEST = 1;
     private Bitmap toretBitmap;
+
     // Internal variables
     private CreateArticleListener listener;
     private Button add_bt;
@@ -79,6 +83,8 @@ public class Fragment_CreateArticle extends Fragment {
     private ImageView selectedImage;
     private TextView Location;
     private Place selectedPlace;
+
+    private Article_Item_Adapter adapter;
 
     public Fragment_CreateArticle() {
         // Required empty public constructor
@@ -89,7 +95,7 @@ public class Fragment_CreateArticle extends Fragment {
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_ajouter_article, container, false);
         add_bt = (Button) root.findViewById(R.id.poster_article);
-
+        adapter = new Article_Item_Adapter(getActivity(), R.layout.article_item,  ((MainActivity)(getActivity())).getNews());
         selectImage = (Button) root.findViewById(R.id.selectimage);
         Location = (TextView) root.findViewById(R.id.newArticle_Location);
         return root;
@@ -172,43 +178,42 @@ public class Fragment_CreateArticle extends Fragment {
         EditText editDesc = (EditText) getView().findViewById(R.id.newArticle_Description);
         ImageView selectedImage = (ImageView) getView().findViewById(R.id.imageView2);
 
-        News news = new News();
+        final Topic news = new Topic();
         news.setTitle(titre.getText().toString());
-       // news.setLocation(selectedPlace);
-        news.setAuthor(AppController.getInstance().getUserLogin());
+        //news.setLocation(selectedPlace);
+        news.setAuthor("http://82.232.20.224/users/2/");
         news.setBody(editDesc.getText().toString());
-        news.setCreatedDate(formattedDate);
+        //news.setCreatedDate(formattedDate);
         if(selectedImage != null && selectedImage.getDrawable() != null)
             news.setImage(((BitmapDrawable)selectedImage.getDrawable()).getBitmap());
-
-        // add news to local array then
-        ((MainActivity)(getActivity())).addArticle(news);
 
         // create HashMap to feed a JSONObject
         HashMap<String, Object> params = new HashMap<>();
         params.put("title", news.getTitle());
-       // params.put("location", news.getRawLocation());
         params.put("author", news.getAuthor());
         params.put("body", news.getBody());
-        //params.put("category", news.getCategory());
-        //params.put("date", news.getCreatedDate());
         params.put("picture", news.getImage());
 
+        // add news to local array then notify adapter of modification
+        ((MainActivity)(getActivity())).addArticle(news);
+
+        adapter.notifyDataSetChanged();
+
         // try to send a POST HTTP Request with previous JSONObject in parameter
-        JsonObjectRequest req = new JsonObjectRequest(URL_FEED_POST, new JSONObject(params),
-                new Response.Listener<JSONObject>() {
+        JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, URL_FEED_POST,
+                new JSONObject(params), new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        try {
-                            VolleyLog.v("Response:%n %s", response.toString(4));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                        if (response != null) {
+                            VolleyLog.v(TAG, "Response: " + response.toString());
+                            Log.d(TAG, "Response: " + response.toString());
                         }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                VolleyLog.e("Error: ", error.getStackTrace());
+                VolleyLog.e(TAG, "Error: " + error.getStackTrace());
+                Log.d(TAG, "Error: " + error.getMessage());
             }
         })  {
             @Override

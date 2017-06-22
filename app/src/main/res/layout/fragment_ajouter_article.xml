@@ -52,13 +52,15 @@
         android:layout_weight="1">
 
         <EditText
+            android:id="@+id/newArticle_Description"
+            style="@style/Widget.AppCompat.Light.AutoCompleteTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:inputType="textPersonName"
             android:ems="10"
-            android:id="@+id/newArticle_Description"
-            android:hint="Corps de texte"
-            style="@style/Widget.AppCompat.Light.AutoCompleteTextView" />
+            android:gravity="top|left"
+            android:hint="Exprimez votre pensée ici"
+            android:inputType="textMultiLine|textPersonName"
+            android:scrollbars="vertical" />
     </LinearLayout>
 
     <Button
