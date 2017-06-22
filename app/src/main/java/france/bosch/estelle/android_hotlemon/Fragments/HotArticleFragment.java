@@ -2,7 +2,6 @@ package france.bosch.estelle.android_hotlemon.Fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -32,9 +31,7 @@ import java.util.Map;
 
 import france.bosch.estelle.android_hotlemon.Adapter.Article_Item_Adapter;
 import france.bosch.estelle.android_hotlemon.App.AppController;
-import france.bosch.estelle.android_hotlemon.Class.News;
 import france.bosch.estelle.android_hotlemon.Class.Topic;
-import france.bosch.estelle.android_hotlemon.Dialog.ChooseTypeDialog;
 import france.bosch.estelle.android_hotlemon.MainActivity;
 import france.bosch.estelle.android_hotlemon.R;
 

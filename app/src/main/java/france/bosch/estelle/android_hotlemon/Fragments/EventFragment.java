@@ -30,10 +30,7 @@ import java.util.Map;
 
 import france.bosch.estelle.android_hotlemon.Adapter.Article_Item_Adapter;
 import france.bosch.estelle.android_hotlemon.App.AppController;
-import france.bosch.estelle.android_hotlemon.Class.Event;
-import france.bosch.estelle.android_hotlemon.Class.News;
 import france.bosch.estelle.android_hotlemon.Class.Topic;
-import france.bosch.estelle.android_hotlemon.Dialog.ChooseTypeDialog;
 import france.bosch.estelle.android_hotlemon.MainActivity;
 import france.bosch.estelle.android_hotlemon.R;
 
@@ -181,7 +178,7 @@ public class EventFragment extends Fragment {
             for (int i = 0; i < feedArray.length(); i++) {
                 final JSONObject feedObj = (JSONObject) feedArray.get(i);
 
-                final Event item = new Event();
+                final Topic item = new Topic();
                 item.setTitle(feedObj.getString("title"));
                 //item.setVoteFor(feedObj.getInt("vote_for"));
                // item.setVoteAgainst(feedObj.getInt("vote_against"));

@@ -59,6 +59,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/article_place"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="0.05"
@@ -69,12 +70,22 @@
                 android:id="@+id/titre"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.76"
+                android:layout_weight="0.43"
                 android:gravity="center"
                 android:text="Titre"
                 android:textAlignment="center"
 
                 android:textColor="@android:color/background_light" />
+
+            <TextView
+                android:id="@+id/article_place"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.43"
+                android:gravity="center_vertical"
+                android:text="Place"
+                android:textAlignment="center"
+                android:textColor="@color/white" />
 
 
         </LinearLayout>

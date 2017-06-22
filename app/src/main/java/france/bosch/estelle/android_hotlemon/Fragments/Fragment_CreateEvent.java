@@ -20,8 +20,7 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 
 
-import france.bosch.estelle.android_hotlemon.Class.Event;
-import france.bosch.estelle.android_hotlemon.Class.News;
+import france.bosch.estelle.android_hotlemon.Class.Topic;
 import france.bosch.estelle.android_hotlemon.MainActivity;
 import france.bosch.estelle.android_hotlemon.R;
 
@@ -89,7 +88,7 @@ public class Fragment_CreateEvent extends Fragment{
         EditText editDesc= (EditText) getView().findViewById(R.id.newArticle_Description);
 
 
-        Event article = new Event(Titre.getText().toString(),editDesc.getText().toString(),selectedPlace);
+        Topic article = new Topic(Titre.getText().toString(),editDesc.getText().toString(),selectedPlace);
         ((MainActivity)(getActivity())).addEvent(article);
         ((MainActivity)(getActivity())).switchFragment( new TabFragment());
     }

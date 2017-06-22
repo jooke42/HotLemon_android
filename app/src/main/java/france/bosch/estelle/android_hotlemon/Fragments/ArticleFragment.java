@@ -33,9 +33,7 @@ import java.util.Map;
 
 import france.bosch.estelle.android_hotlemon.Adapter.Article_Item_Adapter;
 import france.bosch.estelle.android_hotlemon.App.AppController;
-import france.bosch.estelle.android_hotlemon.Class.News;
 import france.bosch.estelle.android_hotlemon.Class.Topic;
-import france.bosch.estelle.android_hotlemon.Dialog.ChooseTypeDialog;
 import france.bosch.estelle.android_hotlemon.MainActivity;
 import france.bosch.estelle.android_hotlemon.R;
 
@@ -151,7 +149,7 @@ public class ArticleFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position,
                                     long id) {
-                News item = (News) parent.getItemAtPosition(position);
+                Topic item = (Topic) parent.getItemAtPosition(position);
                 listener.onArticleClick(item);
             }
         });

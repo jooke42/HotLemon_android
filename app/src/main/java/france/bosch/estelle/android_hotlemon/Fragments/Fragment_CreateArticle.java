@@ -21,8 +21,6 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 
 
-import france.bosch.estelle.android_hotlemon.Class.Event;
-import france.bosch.estelle.android_hotlemon.Class.News;
 import france.bosch.estelle.android_hotlemon.Class.Topic;
 import france.bosch.estelle.android_hotlemon.MainActivity;
 import france.bosch.estelle.android_hotlemon.R;
@@ -80,9 +78,8 @@ public class Fragment_CreateArticle extends Fragment{
                 Select_OnClick();
             }
         });
-        
-    }
 
+    }
 
 
     private void Add_OnClick()

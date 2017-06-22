@@ -13,7 +13,6 @@ import java.util.List;
 
 import france.bosch.estelle.android_hotlemon.App.AppController;
 import france.bosch.estelle.android_hotlemon.ArticleImageView;
-import france.bosch.estelle.android_hotlemon.Class.News;
 import france.bosch.estelle.android_hotlemon.Class.Topic;
 import france.bosch.estelle.android_hotlemon.R;
 

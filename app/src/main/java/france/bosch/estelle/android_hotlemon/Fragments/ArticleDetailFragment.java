@@ -14,7 +14,6 @@ import france.bosch.estelle.android_hotlemon.ArticleImageView;
 import france.bosch.estelle.android_hotlemon.Class.Topic;
 import france.bosch.estelle.android_hotlemon.MainActivity;
 import france.bosch.estelle.android_hotlemon.R;
-import france.bosch.estelle.android_hotlemon.Class.News;
 
 public class ArticleDetailFragment extends Fragment {
     private ArticleImageView ArticleImageView;
@@ -29,10 +28,10 @@ public class ArticleDetailFragment extends Fragment {
     private FloatingActionButton voteAgainst;
     private TextView vote;
     private Topic currentTopic;
-
+    private TextView place;
     public ArticleDetailFragment() {}
 
-    public static ArticleDetailFragment newInstance(News news) {
+    public static ArticleDetailFragment newInstance(Topic news) {
         ArticleDetailFragment fragment = new ArticleDetailFragment();
         return fragment;
     }
@@ -58,6 +57,7 @@ public class ArticleDetailFragment extends Fragment {
         voteAgainst  = (FloatingActionButton) root.findViewById(R.id.voteAgainst);
         vote  = (TextView) root.findViewById(R.id.vote);
         currentTopic =  ((MainActivity)(getActivity())).getCurrentNews();
+        place = (TextView) root.findViewById(R.id.article_place);
         setData();
 
         return root;
@@ -76,6 +76,7 @@ public class ArticleDetailFragment extends Fragment {
         User.setText(currentNews.getAuthor());
         Title.setText(currentNews.getTitle());
         Description.setText(currentNews.getBody());
+        place.setText(currentNews.getLocation().getName());
 
         updateVote();
     }

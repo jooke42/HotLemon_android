@@ -16,10 +16,16 @@ public class Topic {
     protected String title, Author, Body;
     String CreatedDate, PublishedDate;
     int VoteFor, VoteAgainst, Vote;
-    double longitude,laitude;
+    double longitude,latitude;
     Place location;
 
-
+    public Topic(){
+        this.title = "";
+        this.Author = null;
+        this.location = null;
+        this.longitude = 0;
+        this.latitude = 0;
+    }
     public Topic(String title, String user, Place location){
         this.title = title;
         this.Author = user;
@@ -30,6 +36,9 @@ public class Topic {
 
     public double getLongtitude() {
         return longitude;
+    }
+    public Place getLocation(){
+        return location;
     }
 
     public void setLongtitude(double longtitude) {
