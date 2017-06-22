@@ -66,13 +66,15 @@
         android:layout_weight="1">
 
         <EditText
-            android:layout_width="match_parent"
-            android:layout_height="206dp"
-            android:inputType="textPersonName"
-            android:ems="10"
             android:id="@+id/newArticle_Description"
-            android:hint="Corps de texte"
-            style="@style/Widget.AppCompat.Light.AutoCompleteTextView" />
+            style="@style/Widget.AppCompat.Light.AutoCompleteTextView"
+            android:layout_width="match_parent"
+            android:inputType="textPersonName"
+            android:layout_height="match_parent"
+            android:ems="10"
+            android:gravity="top|left"
+            android:hint="Exprimez votre pensée ici"
+            android:scrollbars="vertical" />
     </LinearLayout>
 
     <Button

@@ -109,7 +109,7 @@ public class LoginActivity extends AppCompatActivity {
                             AppController.getInstance().setUserLogin(userLogin);
                             AppController.getInstance().setKeyToken(key);
                             VolleyLog.v("Response:%n %s", response.toString(4));
-                            Log.v("Response:%n %s", response.toString(4));
+                            Log.v(TAG, "Response: " + response.toString());
 
                             onLoginSuccess();
                         } catch (JSONException e) {
@@ -165,6 +165,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onLoginSuccess() {
+        Toast.makeText(getBaseContext(), "Login succeeded, welcome " + AppController.getInstance().getUserLogin(), Toast.LENGTH_LONG).show();
+
         _loginButton.setEnabled(true);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);

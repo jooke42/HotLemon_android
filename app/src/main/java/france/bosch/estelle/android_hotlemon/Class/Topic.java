@@ -4,6 +4,9 @@ import com.google.android.gms.location.places.Place;
 
 import java.util.Date;
 
+import android.graphics.Bitmap;
+
+
 /**
  * Created by ESTEL on 09/06/2017.
  */
@@ -55,6 +58,11 @@ public class Topic {
 
 
     String urlImage;
+    Bitmap image;
+
+    public Bitmap getImage() { return image; }
+
+    public void setImage(Bitmap image) { this.image = image; }
 
     public String getUrlImage() {
         return urlImage;

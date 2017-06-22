@@ -15,10 +15,13 @@ import android.widget.GridView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Cache;
+import com.android.volley.NetworkResponse;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONArray;
@@ -64,10 +67,13 @@ public class HotArticleFragment extends Fragment {
         root = inflater.inflate(R.layout.fragment_article, container, false);
 
         gridView = (GridView) root.findViewById(R.id.grid_article);
+
         adapter = new Article_Item_Adapter(getActivity(), R.layout.article_item,  ((MainActivity)(getActivity())).getHot());
         gridView.setAdapter(null);
 
-        gridView.setAdapter(adapter);
+
+
+
         FloatingActionButton button = (FloatingActionButton) root.findViewById(R.id.fab_create_article);
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -81,54 +87,94 @@ public class HotArticleFragment extends Fragment {
 
         // We first check for cached request
         adapter.clear();
-        Cache cache = AppController.getInstance().getRequestQueue().getCache();
-        Cache.Entry entry = cache.get(URL_FEED_GET);
-        if (entry != null) {
-            // fetch the data from cache
-            try {
-                String data = new String(entry.data, "UTF-8");
-                try {
-                    parseJsonFeed(new JSONObject(data));
-                } catch (JSONException e) {
-                    e.printStackTrace();
+        //Cache cache = AppController.getInstance().getRequestQueue().getCache();
+        //Cache.Entry entry = cache.get(URL_FEED_GET);
+
+        //if (entry != null) {
+        //    // fetch the data from cache
+        //    try {
+        //        String data = new String(entry.data, "UTF-8");
+        //        try {
+        //            parseJsonFeed(new JSONObject(data));
+        //        } catch (JSONException e) {
+        //            e.printStackTrace();
+        //        }
+        //    } catch (UnsupportedEncodingException e) {
+        //        e.printStackTrace();
+        //    }
+
+        //} else {
+        // making fresh volley request and getting json
+        JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.GET,
+                URL_FEED_GET, null, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                VolleyLog.d(TAG, "Response: " + response.toString());
+                Log.d(TAG, "Response: " + response.toString());
+                if (response != null) {
+                    parseJsonFeed(response);
                 }
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.d(TAG, "Error: " + error.getMessage());
+                Log.d(TAG, "Error: " + error.getMessage());
+            }
+        }) {
+            @Override
+            protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+                try {
+                    Cache.Entry cacheEntry = HttpHeaderParser.parseCacheHeaders(response);
+                    if (cacheEntry == null) {
+                        cacheEntry = new Cache.Entry();
+                    }
+                    final long cacheHitButRefreshed = 2 * 60 * 1000; // in 3 minutes cache will be hit, but also refreshed on background
+                    final long cacheExpired = 24 * 60 * 60 * 1000; // in 24 hours this cache entry expires completely
+                    long now = System.currentTimeMillis();
+                    final long softExpire = now + cacheHitButRefreshed;
+                    final long ttl = now + cacheExpired;
+                    cacheEntry.data = response.data;
+                    cacheEntry.softTtl = softExpire;
+                    cacheEntry.ttl = ttl;
+                    String headerValue;
+                    headerValue = response.headers.get("Date");
+
+                    if (headerValue != null) {
+                        cacheEntry.serverDate = HttpHeaderParser.parseDateAsEpoch(headerValue);
+                    }
+
+                    headerValue = response.headers.get("Last-Modified");
+                    if (headerValue != null) {
+                        cacheEntry.lastModified = HttpHeaderParser.parseDateAsEpoch(headerValue);
+                    }
+
+                    cacheEntry.responseHeaders = response.headers;
+                    final String jsonString = new String(response.data,
+                            HttpHeaderParser.parseCharset(response.headers));
+
+                    return Response.success(new JSONObject(jsonString), cacheEntry);
+                } catch (UnsupportedEncodingException e) {
+                    return Response.error(new ParseError(e));
+                } catch (JSONException e) {
+                    return Response.error(new ParseError(e));
+                }
             }
 
-        } else {
-            // making fresh volley request and getting json
-            JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.GET,
-                    URL_FEED_GET, null, new Response.Listener<JSONObject>() {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                headers.put("Authorization", "Token " + AppController.getInstance().getKeyToken());
+                return headers;
+            }
+        };
 
-                @Override
-                public void onResponse(JSONObject response) {
-                    VolleyLog.d(TAG, "Response: " + response.toString());
-                    Log.d(TAG, "Response: " + response.toString());
-                    if (response != null) {
-                        parseJsonFeed(response);
-                    }
-                }
-            }, new Response.ErrorListener() {
-
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    VolleyLog.d(TAG, "Error: " + error.getMessage());
-                    Log.d(TAG, "Error: " + error.getMessage());
-                }
-            })  {
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    HashMap<String, String> headers = new HashMap<String, String>();
-                    headers.put("Content-Type", "application/json");
-                    headers.put("Authorization", "Token " + AppController.getInstance().getKeyToken());
-                    return headers;
-                }
-            };
-
-            // Adding request to volley request queue
-            AppController.getInstance().addToRequestQueue(jsonReq);
-        }
+        // Adding request to volley request queue
+        AppController.getInstance().addToRequestQueue(jsonReq);
+        //}
 
         return root;
     }
@@ -160,7 +206,7 @@ public class HotArticleFragment extends Fragment {
         try{
             listener = (HotArticleFragmentListener) context;
         }catch (ClassCastException e){
-            throw new ClassCastException(context.toString() + "must implement ArticleFragmentListener");
+            throw new ClassCastException(context.toString() + "must implement HotArticleFragmentListener");
         }
     }
 
@@ -175,6 +221,10 @@ public class HotArticleFragment extends Fragment {
                 final JSONObject feedObj = (JSONObject) feedArray.get(i);
 
                 final Topic item = new Topic();
+
+                final String[] usernameRequested = {""};
+
+
                 item.setTitle(feedObj.getString("title"));
                 item.setBody(feedObj.getString("body"));
                 item.setVoteFor(feedObj.getInt("vote_for"));
@@ -197,7 +247,7 @@ public class HotArticleFragment extends Fragment {
                         Log.d(TAG, "Response: " + response.toString());
 
                         if (response != null) {
-                            item.setAuthor(parseJsonUsername(response));
+                            parseJsonUsername(response, item);
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -221,11 +271,14 @@ public class HotArticleFragment extends Fragment {
                 // Adding request to volley request queue
                 AppController.getInstance().addToRequestQueue(jsonReq);
 
+
                 //// Check ID of News Item to avoid duplication in gridView when switching fragment
                 if(item.getVote() >= 10)
                     ((MainActivity)(getActivity())).addHotList(item);
 
 
+
+                // Adding article to the global list and notify adapter of the modification
 
             }
 
@@ -236,20 +289,16 @@ public class HotArticleFragment extends Fragment {
         }
     }
 
-    private String parseJsonUsername(JSONObject response) {
-        String feedUser = "";
-
+    private void parseJsonUsername(JSONObject response, final Topic item) {
         try {
+            String feedUser = "";
             feedUser = response.getString("username");
+
+            if (feedUser != "" || feedUser != null)
+                item.setAuthor(feedUser);
         }
         catch(JSONException e) {
             e.printStackTrace();
         }
-
-        if (feedUser != null || feedUser != "") {
-            return feedUser;
-        }
-
-        return feedUser;
     }
 }

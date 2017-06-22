@@ -14,37 +14,39 @@
         android:layout_alignParentEnd="true">
 
         <TextView
-            android:text="Type"
+            android:id="@+id/titleType"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:id="@+id/titleType"
             android:layout_weight="1"
+            android:background="@color/Green"
+            android:text="Type"
             android:textAlignment="center"
-            android:textSize="30sp"
             android:textColor="@color/white"
-            android:background="@color/Green" />
+            android:textSize="30sp" />
 
     </LinearLayout>
 
     <Switch
-        android:text="News"
+        android:id="@+id/newsSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/titleBar"
         android:layout_marginStart="44dp"
         android:layout_marginTop="49dp"
-        android:id="@+id/newsSwitch"
-        android:layout_below="@+id/titleBar"
-        android:layout_alignParentStart="true"
+        android:switchPadding="20dp"
+        android:text="News"
         android:textSize="30sp" />
 
     <Switch
-        android:text="Event"
+        android:id="@+id/eventSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="54dp"
-        android:id="@+id/eventSwitch"
-        android:layout_below="@+id/newsSwitch"
         android:layout_alignStart="@+id/newsSwitch"
+        android:layout_below="@+id/newsSwitch"
+        android:layout_marginTop="54dp"
+        android:switchPadding="20dp"
+        android:text="Event"
         android:textSize="30sp" />
 
 
