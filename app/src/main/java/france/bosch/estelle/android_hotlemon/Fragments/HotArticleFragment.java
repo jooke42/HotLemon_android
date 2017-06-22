@@ -180,7 +180,7 @@ public class HotArticleFragment extends Fragment {
                 item.setVoteFor(feedObj.getInt("vote_for"));
                 item.setVoteAgainst(feedObj.getInt("vote_against"));
                 //TODO change
-                item.setCreatedDate(feedObj.getString("created"));
+                //item.setCreatedDate(feedObj.getString("created"));
                 // Image might be null sometimes
               /* String image = feedObj.isNull("picture") ? null : feedObj
                         .getString("picture");

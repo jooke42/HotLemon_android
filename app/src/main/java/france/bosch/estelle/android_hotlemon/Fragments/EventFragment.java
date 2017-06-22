@@ -45,7 +45,7 @@ public class EventFragment extends Fragment {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private String URL_FEED = "https://perso.esiee.fr/~pereirae/webe3fi/test.json";
-    private String URL_FEED_GET = "http://82.232.20.224/events/";
+    private String URL_FEED_GET = "http://82.232.20.224/topics/";
     private GridView gridView;
     private Article_Item_Adapter adapter;
     private NewsFragmentListener listener;
