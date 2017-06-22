@@ -90,7 +90,7 @@ public class Fragment_CreateEvent extends Fragment{
 
 
         Event article = new Event(Titre.getText().toString(),editDesc.getText().toString(),selectedPlace);
-        ((MainActivity)(getActivity())).addArticle(article);
+        ((MainActivity)(getActivity())).addEvent(article);
         ((MainActivity)(getActivity())).switchFragment( new TabFragment());
     }
 

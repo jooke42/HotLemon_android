@@ -25,15 +25,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import france.bosch.estelle.android_hotlemon.Adapter.Article_Item_Adapter;
 import france.bosch.estelle.android_hotlemon.App.AppController;
+import france.bosch.estelle.android_hotlemon.Class.Event;
 import france.bosch.estelle.android_hotlemon.Class.News;
 import france.bosch.estelle.android_hotlemon.Class.Topic;
 import france.bosch.estelle.android_hotlemon.Dialog.ChooseTypeDialog;
@@ -41,28 +38,25 @@ import france.bosch.estelle.android_hotlemon.MainActivity;
 import france.bosch.estelle.android_hotlemon.R;
 
 /**
- * Created by ESTEL on 20/06/2017.
+ * Created by ESTEL on 21/06/2017.
  */
 
-public class TrendingArticleFragment extends Fragment {
-    public interface TrendingArticleListener {
+public class EventFragment extends Fragment {
+    public interface NewsFragmentListener {
         void onArticleClick(Topic news);
     }
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private String URL_FEED = "https://perso.esiee.fr/~pereirae/webe3fi/test.json";
+    private String URL_FEED_GET = "http://82.232.20.224/events/";
     private GridView gridView;
     private Article_Item_Adapter adapter;
-    private TrendingArticleListener listener;
+    private NewsFragmentListener listener;
 
-    public TrendingArticleFragment() {
+    public EventFragment() {
         // Required empty public constructor
     }
 
-    public static TrendingArticleFragment newInstance() {
-        TrendingArticleFragment fragment = new TrendingArticleFragment();
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,25 +67,29 @@ public class TrendingArticleFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root;
-        root = inflater.inflate(R.layout.trending_article_fragment, container, false);
+        root = inflater.inflate(R.layout.fragment_article, container, false);
 
         gridView = (GridView) root.findViewById(R.id.grid_article);
-        adapter = new Article_Item_Adapter(getActivity(), R.layout.article_item,  ((MainActivity)(getActivity())).getTrendingList());
+
+        adapter = new Article_Item_Adapter(getActivity(), R.layout.article_item,  ((MainActivity)(getActivity())).getNews());
+        gridView.setAdapter(null);
+
         gridView.setAdapter(adapter);
         FloatingActionButton button = (FloatingActionButton) root.findViewById(R.id.fab_create_article);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity)(getActivity())).switchFragment(new ChooseTypeDialog());
+                ((MainActivity)(getActivity())).showChooseTypeDialog();
             }
         });
 
         /// Code added to test JSON requests and article feed (and it works mf !) ///
 
         // We first check for cached request
+        adapter.clear();
         Cache cache = AppController.getInstance().getRequestQueue().getCache();
-        Cache.Entry entry = cache.get(URL_FEED);
+        Cache.Entry entry = cache.get(URL_FEED_GET);
         if (entry != null) {
             // fetch the data from cache
             try {
@@ -108,11 +106,12 @@ public class TrendingArticleFragment extends Fragment {
         } else {
             // making fresh volley request and getting json
             JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.GET,
-                    URL_FEED, null, new Response.Listener<JSONObject>() {
+                    URL_FEED_GET, null, new Response.Listener<JSONObject>() {
 
                 @Override
                 public void onResponse(JSONObject response) {
                     VolleyLog.d(TAG, "Response: " + response.toString());
+                    Log.d(TAG, "Response: " + response.toString());
                     if (response != null) {
                         parseJsonFeed(response);
                     }
@@ -122,8 +121,17 @@ public class TrendingArticleFragment extends Fragment {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
+                    Log.d(TAG, "Error: " + error.getMessage());
                 }
-            });
+            })  {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap<String, String> headers = new HashMap<String, String>();
+                    headers.put("Content-Type", "application/json");
+                    headers.put("Authorization", "Token " + AppController.getInstance().getKeyToken());
+                    return headers;
+                }
+            };
 
             // Adding request to volley request queue
             AppController.getInstance().addToRequestQueue(jsonReq);
@@ -157,7 +165,7 @@ public class TrendingArticleFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try{
-            listener = (TrendingArticleListener) context;
+            listener = (NewsFragmentListener) context;
         }catch (ClassCastException e){
             throw new ClassCastException(context.toString() + "must implement ArticleFragmentListener");
         }
@@ -173,28 +181,17 @@ public class TrendingArticleFragment extends Fragment {
             for (int i = 0; i < feedArray.length(); i++) {
                 final JSONObject feedObj = (JSONObject) feedArray.get(i);
 
-                final News item = new News();
-
+                final Event item = new Event();
                 item.setTitle(feedObj.getString("title"));
-
-                //item.setRawLocation(feedObj.getString("location"));
-                item.setAuthor(feedObj.getString("user"));
-                item.setBody(feedObj.getString("description"));
-                item.setVoteFor(feedObj.getInt("vote_for"));
-                item.setVoteAgainst(feedObj.getInt("vote_against"));
-                //item.setCategory(feedObj.getString("category"));
-                //TODO change
-                //item.setCreatedDate(feedObj.getString("date"));
-
-
-                //item.setAuthor(feedObj.getString("author"));
+                //item.setVoteFor(feedObj.getInt("vote_for"));
+               // item.setVoteAgainst(feedObj.getInt("vote_against"));
                 item.setBody(feedObj.getString("body"));
 
 
                 // Image might be null sometimes
-                String image = feedObj.isNull("picture") ? null : feedObj
+                /*String image = feedObj.isNull("picture") ? null : feedObj
                         .getString("picture");
-                item.setUrlImage(image);
+                item.setUrlImage(image);*/
 
                 // Request username from post
                 // making fresh volley request and getting json
@@ -233,7 +230,7 @@ public class TrendingArticleFragment extends Fragment {
 
                 //// Check ID of News Item to avoid duplication in gridView when switching fragment
 
-                ((MainActivity)(getActivity())).addArticle(item);
+                ((MainActivity)(getActivity())).addEvent(item);
 
 
 
@@ -262,5 +259,7 @@ public class TrendingArticleFragment extends Fragment {
 
         return feedUser;
     }
+
+
 
 }

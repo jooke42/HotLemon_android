@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/ajouter_article_layout">
+    android:id="@+id/addarticle">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -13,8 +13,7 @@
         <EditText
             android:id="@+id/newArticle_Title"
             android:layout_width="wrap_content"
-            android:layout_height="86dp"
-            android:layout_weight="1"
+            android:layout_height="63dp"
             android:ems="10"
             android:hint="Titre"
             android:inputType="textPersonName"
@@ -27,13 +26,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <TextView
+            android:text="Localisation"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/newArticle_Location"
+            android:layout_weight="3.47"
+            android:textSize="20sp" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            app:srcCompat="@android:drawable/ic_dialog_map"
+            android:id="@+id/change_location" />
+
     </LinearLayout>
 
     <ImageView
-        android:layout_width="match_parent"
         android:id="@+id/imageView2"
+        android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:layout_weight="0.14" />
+        android:layout_weight="6.09" />
 
     <Button
         android:id="@+id/selectimage"
@@ -53,7 +67,7 @@
 
         <EditText
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="206dp"
             android:inputType="textPersonName"
             android:ems="10"
             android:id="@+id/newArticle_Description"
@@ -69,5 +83,6 @@
         android:layout_gravity="center_horizontal"
         android:backgroundTint="@color/colorAccent"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-        android:textColor="@android:color/background_light" />
+        android:textColor="@android:color/background_light"
+        android:layout_weight="0.15" />
 </LinearLayout>

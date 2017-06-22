@@ -9,6 +9,12 @@ import com.google.android.gms.location.places.Place;
 
 public class Event extends Topic {
 Place location;
+
+    public Event(){
+        title = "";
+        Author = null;
+        location = null;
+    }
     public Event(String title, String user, Place location){
         this.title = title;
         this.Author = user;

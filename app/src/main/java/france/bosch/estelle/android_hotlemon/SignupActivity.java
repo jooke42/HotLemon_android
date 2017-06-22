@@ -69,7 +69,7 @@ public class SignupActivity extends AppCompatActivity {
 
         _signupButton.setEnabled(false);
 
-        // Create progress dialog as loading screen
+        //Create progress dialog as loading screen
         final ProgressDialog progressDialog = new ProgressDialog(SignupActivity.this,
                 R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
@@ -81,17 +81,19 @@ public class SignupActivity extends AppCompatActivity {
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
 
-        // Set new Utilisateur to be converted as JSON Object
+        //Set new Utilisateur to be converted as JSON Object
         Utilisateur user = new Utilisateur();
         user.setUsername(name);
         user.setEmail(email);
         user.setPassword(password);
+
 
         HashMap<String, String> params = new HashMap<>();
         params.put("username", user.getUsername());
         params.put("email", user.getEmail());
         params.put("password1", user.getPassword());
         params.put("password2", user.getPassword());
+
 
         // Try to send a POST HTTP Request with previous JSONObject in parameter
         JsonObjectRequest req = new JsonObjectRequest(REGISTER_URL, new JSONObject(params),

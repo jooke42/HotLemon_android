@@ -1,5 +1,7 @@
 package france.bosch.estelle.android_hotlemon.Class;
 
+import com.google.android.gms.location.places.Place;
+
 import java.util.Date;
 
 /**
@@ -8,10 +10,41 @@ import java.util.Date;
 
 public class Topic {
 
+
+
     private Long id;
     protected String title, Author, Body;
-    Date CreatedDate, PublishedDate;
+    String CreatedDate, PublishedDate;
     int VoteFor, VoteAgainst, Vote;
+    double longitude,laitude;
+    Place location;
+
+
+    public Topic(String title, String user, Place location){
+        this.title = title;
+        this.Author = user;
+        this.location = location;
+        this.longitude = location.getLatLng().longitude;
+        this.latitude = location.getLatLng().latitude;
+    }
+
+    public double getLongtitude() {
+        return longitude;
+    }
+
+    public void setLongtitude(double longtitude) {
+        this.longitude = longtitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+
     String urlImage;
 
     public String getUrlImage() {
@@ -54,19 +87,19 @@ public class Topic {
         Body = body;
     }
 
-    public Date getCreatedDate() {
+    public String getCreatedDate() {
         return CreatedDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(String createdDate) {
         CreatedDate = createdDate;
     }
 
-    public Date getPublishedDate() {
+    public String getPublishedDate() {
         return PublishedDate;
     }
 
-    public void setPublishedDate(Date publishedDate) {
+    public void setPublishedDate(String publishedDate) {
         PublishedDate = publishedDate;
     }
     public int getVoteFor() {

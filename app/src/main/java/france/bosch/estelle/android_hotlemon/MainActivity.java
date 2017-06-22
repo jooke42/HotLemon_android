@@ -18,13 +18,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
 
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-
-import france.bosch.estelle.android_hotlemon.Class.News;
 
 import france.bosch.estelle.android_hotlemon.Class.Topic;
 import france.bosch.estelle.android_hotlemon.Dialog.ChooseTypeDialog;
@@ -34,74 +29,47 @@ import france.bosch.estelle.android_hotlemon.Fragments.EditProfilFragment;
 import france.bosch.estelle.android_hotlemon.Fragments.Fragment_CreateArticle;
 import france.bosch.estelle.android_hotlemon.Fragments.Fragment_CreateEvent;
 import france.bosch.estelle.android_hotlemon.Fragments.HotArticleFragment;
+import france.bosch.estelle.android_hotlemon.Fragments.EventFragment;
 import france.bosch.estelle.android_hotlemon.Fragments.TabFragment;
-import france.bosch.estelle.android_hotlemon.Fragments.TrendingArticleFragment;
 import france.bosch.estelle.android_hotlemon.Helper.FragmentUtils;
 
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         ArticleFragment.ArticleFragmentListener,
-        Fragment_CreateArticle.CreateArticleListener,
         FragmentUtils.ActivityForResultStarter,
         HotArticleFragment.HotArticleFragmentListener,
         ChooseTypeDialog.ChooseTypeListener,
-        TrendingArticleFragment.TrendingArticleListener
+        EventFragment.NewsFragmentListener
 {
     private SparseArray<Bundle> requests;
-    private int PLACE_PICKER_REQUEST = 1;
     private RelativeLayout framelayout;
     private Topic currentNews;
     private ArrayList<Topic> newsList = new ArrayList<Topic>();
     private ArrayList<Topic> HotList = new ArrayList<Topic>();
-    private ArrayList<Topic> TrendingList = new ArrayList<Topic>();
-    private ArrayList<Topic> FreshList = new ArrayList<Topic>();
-    Calendar currentDate = Calendar.getInstance();
+
+    private ArrayList<Topic> eventList = new ArrayList<Topic>();
+
 
     public ArrayList<Topic> getNews() {
         return this.newsList;
     }
-
-
-  public ArrayList<Topic> getFresh() {
-
-         for (Topic t:newsList
-             ) {
-           // if(t.getCreatedDate() <= currentDate.getTime())
-
-            if(!FreshList.contains(t))
-                FreshList.add(t);
-
-        }
-
-        return this.newsList;
+    public ArrayList<Topic> getEvent() {
+        return this.eventList;
     }
 
     public ArrayList<Topic> getHot() {
-        fillHotList();
+
         return this.HotList;
     }
 
-    private void fillHotList(){
-        for (Topic t:newsList)
-        {
-            if(t.getVote() >= 10 && !newsList.contains(t))
+    public void addHotList(Topic t){
                 HotList.add(t);
-        }
     }
 
-    public ArrayList<Topic> getTrendingList() {
-        fillTrendingList();
-        return this.TrendingList;
-    }
 
-    private void fillTrendingList(){
-        for (Topic t:newsList)
-        {
-            //if(t.getVote() >= 10)
-                TrendingList.add(t);
-        }
-    }
+
+
 
 
     public Topic getCurrentNews() {
@@ -112,9 +80,14 @@ public class MainActivity extends AppCompatActivity
         this.currentNews = currentNews;
     }
 
-    public void addArticle(Topic news){
-        if(!newsList.contains(news))
+    public void addNews(Topic news){
+      //  if(!newsList.contains(news))
                 newsList.add(news);
+
+    }
+    public void addEvent(Topic news){
+        // if(!eventList.contains(news))
+        eventList.add(news);
     }
 
     @Override
@@ -312,21 +285,6 @@ public class MainActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    // TODO : Implement fragments interfaces on listener calls
-    @Override
-    public void onSelectImage() {
-
-    }
-
-    @Override
-    public void onAddArticle() {
-
-    }
-
-    @Override
-    public void onLocationChanged() {
-
-    }
 
     @Override
     public void onChooseValidation(String type){

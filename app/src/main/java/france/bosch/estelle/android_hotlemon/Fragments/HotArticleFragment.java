@@ -46,7 +46,7 @@ public class HotArticleFragment extends Fragment {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private String URL_FEED = "https://perso.esiee.fr/~pereirae/webe3fi/test.json";
-    private String URL_FEED_GET = "http://82.232.20.224/news/";
+    private String URL_FEED_GET = "http://82.232.20.224/topics/";
     private GridView gridView;
     private Article_Item_Adapter adapter;
     private HotArticleFragmentListener listener;
@@ -67,8 +67,7 @@ public class HotArticleFragment extends Fragment {
         root = inflater.inflate(R.layout.fragment_article, container, false);
 
         gridView = (GridView) root.findViewById(R.id.grid_article);
-
-        adapter = new Article_Item_Adapter(getActivity(), R.layout.article_item,  ((MainActivity)(getActivity())).getNews());
+        adapter = new Article_Item_Adapter(getActivity(), R.layout.article_item,  ((MainActivity)(getActivity())).getHot());
         gridView.setAdapter(null);
 
         gridView.setAdapter(adapter);
@@ -178,28 +177,17 @@ public class HotArticleFragment extends Fragment {
             for (int i = 0; i < feedArray.length(); i++) {
                 final JSONObject feedObj = (JSONObject) feedArray.get(i);
 
-                final News item = new News();
-
+                final Topic item = new Topic();
                 item.setTitle(feedObj.getString("title"));
-
-                //item.setRawLocation(feedObj.getString("location"));
-                item.setAuthor(feedObj.getString("user"));
-                item.setBody(feedObj.getString("description"));
+                item.setBody(feedObj.getString("body"));
                 item.setVoteFor(feedObj.getInt("vote_for"));
                 item.setVoteAgainst(feedObj.getInt("vote_against"));
-                //item.setCategory(feedObj.getString("category"));
                 //TODO change
-                //item.setCreatedDate(feedObj.getString("date"));
-
-
-                //item.setAuthor(feedObj.getString("author"));
-                item.setBody(feedObj.getString("body"));
-
-
+                item.setCreatedDate(feedObj.getString("created"));
                 // Image might be null sometimes
-                String image = feedObj.isNull("picture") ? null : feedObj
+              /* String image = feedObj.isNull("picture") ? null : feedObj
                         .getString("picture");
-                item.setUrlImage(image);
+                item.setUrlImage(image);*/
 
                 // Request username from post
                 // making fresh volley request and getting json
@@ -237,8 +225,8 @@ public class HotArticleFragment extends Fragment {
                 AppController.getInstance().addToRequestQueue(jsonReq);
 
                 //// Check ID of News Item to avoid duplication in gridView when switching fragment
-
-                ((MainActivity)(getActivity())).addArticle(item);
+                if(item.getVote() >= 10)
+                    ((MainActivity)(getActivity())).addHotList(item);
 
 
 

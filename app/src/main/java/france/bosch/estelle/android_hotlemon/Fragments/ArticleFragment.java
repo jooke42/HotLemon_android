@@ -47,7 +47,7 @@ public class ArticleFragment extends Fragment {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private String URL_FEED = "https://perso.esiee.fr/~pereirae/webe3fi/test.json";
-    private String URL_FEED_GET = "http://82.232.20.224/news/";
+    private String URL_FEED_GET = "http://82.232.20.224/topics";
     private GridView gridView;
     private Article_Item_Adapter adapter;
     private ArticleFragmentListener listener;
@@ -73,7 +73,10 @@ public class ArticleFragment extends Fragment {
         root = inflater.inflate(R.layout.fragment_article, container, false);
 
         gridView = (GridView) root.findViewById(R.id.grid_article);
+
         adapter = new Article_Item_Adapter(getActivity(), R.layout.article_item,  ((MainActivity)(getActivity())).getNews());
+        gridView.setAdapter(null);
+
         gridView.setAdapter(adapter);
         FloatingActionButton button = (FloatingActionButton) root.findViewById(R.id.fab_create_article);
 
@@ -123,7 +126,7 @@ public class ArticleFragment extends Fragment {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
                     Log.d(TAG, "Error: " + error.getMessage());
                 }
-            }) {
+            })  {
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
                     HashMap<String, String> headers = new HashMap<String, String>();
@@ -139,7 +142,6 @@ public class ArticleFragment extends Fragment {
 
         return root;
     }
-
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -179,49 +181,62 @@ public class ArticleFragment extends Fragment {
             JSONArray feedArray = response.getJSONArray("results");
 
             for (int i = 0; i < feedArray.length(); i++) {
-                JSONObject feedObj = (JSONObject) feedArray.get(i);
+                final JSONObject feedObj = (JSONObject) feedArray.get(i);
 
-                Topic item = new Topic();
-
-                /*item.setTitle(feedObj.getString("title"));
-                //item.setRawLocation(feedObj.getString("location"));
-                item.setAuthor(feedObj.getString("user"));
-                item.setBody(feedObj.getString("description"));
-                //item.setCategory(feedObj.getString("category"));
-                SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
-                Date date = Calendar.getInstance().getTime();
-                try {
-
-                    date = formatter.parse(feedObj.getString("date"));
-                    System.out.println(date);
-                    System.out.println(formatter.format(date));
-
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-                //item.setCreatedDate(feedObj.getString("date"));
-                item.setCreatedDate(date);
-
-                // Image might be null sometimes
-                String image = feedObj.isNull("Urlimage") ? null : feedObj
-                        .getString("Urlimage");
-                item.setUrlimage(image);*/
+                final Topic item = new Topic();
 
                 item.setTitle(feedObj.getString("title"));
-                //item.setRawLocation(feedObj.getString("location"));
-                item.setAuthor(feedObj.getString("author"));
                 item.setBody(feedObj.getString("body"));
-                //item.setCategory(feedObj.getString("category"));
+                // item.setVoteFor(feedObj.getInt("vote_for"));
+                // item.setVoteAgainst(feedObj.getInt("vote_against"));
+                //TODO change
                 //item.setCreatedDate(feedObj.getString("date"));
-
                 // Image might be null sometimes
                 String image = feedObj.isNull("picture") ? null : feedObj
                         .getString("picture");
                 item.setUrlImage(image);
 
+                // Request username from post
+                // making fresh volley request and getting json
+                JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.GET,
+                        feedObj.getString("author"), null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        VolleyLog.d(TAG, "Response: " + response.toString());
+                        Log.d(TAG, "Response: " + response.toString());
+
+                        if (response != null) {
+                            item.setAuthor(parseJsonUsername(response));
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        VolleyLog.d(TAG, "Error: " + error.getStackTrace());
+                        Log.d(TAG, "Error: " + error.getMessage());
+                    }
+                })  {
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        HashMap<String, String> headers = new HashMap<String, String>();
+                        headers.put("Content-Type", "application/json");
+                        headers.put("Authorization", "Token " + AppController.getInstance().getKeyToken());
+                        return headers;
+                    }
+                };
+
+
+                // Adding request to volley request queue
+                AppController.getInstance().addToRequestQueue(jsonReq);
+
                 //// Check ID of News Item to avoid duplication in gridView when switching fragment
-               // ((MainActivity)(getActivity())).addArticle(item);
+
+                ((MainActivity)(getActivity())).addNews(item);
+
+
+
             }
 
             // notify data changes to list adapter
@@ -229,5 +244,21 @@ public class ArticleFragment extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+    private String parseJsonUsername(JSONObject response) {
+        String feedUser = "";
+
+        try {
+            feedUser = response.getString("username");
+        }
+        catch(JSONException e) {
+            e.printStackTrace();
+        }
+
+        if (feedUser != null || feedUser != "") {
+            return feedUser;
+        }
+
+        return feedUser;
     }
 }
