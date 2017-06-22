@@ -25,6 +25,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.gms.location.places.Place;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -97,7 +98,7 @@ public class ArticleFragment extends Fragment {
 
         // We first check for cached request
 
-        /*Cache cache = AppController.getInstance().getRequestQueue().getCache();
+        Cache cache = AppController.getInstance().getRequestQueue().getCache();
         Cache.Entry entry = cache.get(URL_FEED_GET);
         if (entry != null) {
             // fetch the data from cache
@@ -112,7 +113,7 @@ public class ArticleFragment extends Fragment {
                 e.printStackTrace();
             }
 
-        } else {*/
+        } else {
             // making fresh volley request and getting json
             JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.GET,
                     URL_FEED_GET, null, new Response.Listener<JSONObject>() {
@@ -132,7 +133,7 @@ public class ArticleFragment extends Fragment {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
                     Log.d(TAG, "Error: " + error.getMessage());
                 }
-            })  {
+            }) {
                 @Override
                 protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
                     try {
@@ -183,9 +184,11 @@ public class ArticleFragment extends Fragment {
 
             // Adding request to volley request queue
             AppController.getInstance().addToRequestQueue(jsonReq);
-       // }
+            // }
+        }
 
-        return root;
+            return root;
+
     }
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -244,7 +247,7 @@ public class ArticleFragment extends Fragment {
                 item.setBody(feedObj.getString("body"));
                 item.setVoteFor(feedObj.getInt("vote_for"));
                 item.setVoteAgainst(feedObj.getInt("vote_against"));
-       /*         if (feedObj.getString("longitude") != "null")
+                if (feedObj.getString("longitude") != "null")
                     item.setlongitude(Double.parseDouble(feedObj.getString("longitude")));
                 if (feedObj.getString("latitude") != "null")
                     item.setLatitude(Double.parseDouble(feedObj.getString("latitude")));
@@ -260,11 +263,11 @@ public class ArticleFragment extends Fragment {
                     }
 
                     if (addresses.size() != 0) {
-                        Address address = addresses.get(0);//.getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+                        Address address = addresses.get(0);
                         item.setAddress(address);
                     }
                 }
-*/
+
                 //TODO change
                 //item.setCreatedDate(feedObj.getString("date"));
                 // Image might be null sometimes

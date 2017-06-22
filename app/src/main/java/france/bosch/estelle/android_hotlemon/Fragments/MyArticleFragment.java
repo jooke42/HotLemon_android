@@ -272,7 +272,7 @@ public class MyArticleFragment extends Fragment {
                 AppController.getInstance().addToRequestQueue(jsonReq);
 
 
-                if (AppController.getInstance().getUserURL() == feedObj.getString("title"))
+                if (AppController.getInstance().getUserLogin() == feedObj.getString("title"))
                     ((MainActivity) (getActivity())).addMyArticleLis(item);
 
 

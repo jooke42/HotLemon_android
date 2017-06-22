@@ -28,6 +28,7 @@ public class ArticleDetailFragment extends Fragment {
     private TextView vote;
     private Topic currentTopic;
     private TextView place;
+
     public ArticleDetailFragment() {}
 
     public static ArticleDetailFragment newInstance(Topic news) {
@@ -70,12 +71,12 @@ public class ArticleDetailFragment extends Fragment {
 
         ArticleImageView.setImageUrl(currentNews.getUrlImage(), imageLoader);
         //Date.setText(currentNews.getCreatedDate().toString());
-        //Location.setText(currentNews.getRawLocation());
+
         User.setText(currentNews.getAuthor());
         Title.setText(currentNews.getTitle());
         Description.setText(currentNews.getBody());
         if(currentNews.getLocation() != null)
-        place.setText(currentNews.getAddress().getAddressLine(0));
+        place.setText(currentNews.getLocation().getName());
 
         updateVote();
     }
