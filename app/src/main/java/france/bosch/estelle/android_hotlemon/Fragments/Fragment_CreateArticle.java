@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +37,7 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -105,7 +107,8 @@ public class Fragment_CreateArticle extends Fragment{
 
     }
 
-    private void Add_OnClick() {
+    private void Add_OnClick()
+    {
         final ProgressDialog progressDialog = new ProgressDialog(getActivity(),
                 R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
@@ -125,35 +128,41 @@ public class Fragment_CreateArticle extends Fragment{
         article.setBody(editDesc.getText().toString());
 
         if (toretBitmap != null)
-            article.setImage(((BitmapDrawable) selectedImage.getDrawable()).getBitmap());
+            article.setImage(((BitmapDrawable)selectedImage.getDrawable()).getBitmap());
 
-        ((MainActivity) (getActivity())).addNews(article);
+        ((MainActivity)(getActivity())).addNews(article);
         HashMap<String, Object> params = new HashMap<>();
         params.put("title", article.getTitle());
         params.put("author", article.getAuthor());
         params.put("body", article.getBody());
-        params.put("picture", article.getUrlImage());
+        params.put("picture", article.getImage());
+        JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, URL_FEED_POST,
+                new JSONObject(params), new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    //key = response.getString("key");
+                    //userLogin = user.getUsername();
+                    //AppController.getInstance().setUserLogin(userLogin);
+                    //AppController.getInstance().setKeyToken(key);
+                    VolleyLog.v("Response:%n %s", response.toString(4));
+                    Log.v(TAG, "Response: " + response.toString());
 
+                    //onLoginSuccess();
 
-        StringRequest postRequest = new StringRequest(Request.Method.POST, URL_FEED_POST,
-                new Response.Listener<String>()
-                {
-                    @Override
-                    public void onResponse(String response) {
-                        // response
-                        Log.d("Response", response);
-                    }
-                },
-                new Response.ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // error
-                        VolleyLog.e("Error: ", error.getMessage());
-                    }
+                    progressDialog.dismiss();
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-        ) {
-
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.e("Error: ", error.getMessage());
+                Log.e("Error: ", ""+ error.getMessage());
+                //onLoginFailed();
+            }
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<String, String>();
@@ -163,12 +172,10 @@ public class Fragment_CreateArticle extends Fragment{
             }
         };
 
-
-        AppController.getInstance().addToRequestQueue(postRequest, "topics post");
+        AppController.getInstance().addToRequestQueue(req, "topics post");
 
         ((MainActivity)(getActivity())).switchFragment(new TabFragment());
     }
-
 
    /* private void Add_OnClick()
     {
@@ -195,6 +202,16 @@ public class Fragment_CreateArticle extends Fragment{
         isGPSEnabled();
 
 
+    }
+
+    public String convert_bitmap_to_string(Bitmap bitmap)
+    {
+        ByteArrayOutputStream full_stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, full_stream);
+        byte[] full_bytes = full_stream.toByteArray();
+        String Str_image = Base64.encodeToString(full_bytes, Base64.DEFAULT);
+
+        return Str_image;
     }
 
     public void isGPSEnabled(){

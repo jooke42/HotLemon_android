@@ -98,7 +98,7 @@ public class ArticleFragment extends Fragment {
 
         // We first check for cached request
 
-        Cache cache = AppController.getInstance().getRequestQueue().getCache();
+        /*Cache cache = AppController.getInstance().getRequestQueue().getCache();
         Cache.Entry entry = cache.get(URL_FEED_GET);
         if (entry != null) {
             // fetch the data from cache
@@ -113,7 +113,7 @@ public class ArticleFragment extends Fragment {
                 e.printStackTrace();
             }
 
-        } else {
+        } else {*/
             // making fresh volley request and getting json
             JsonObjectRequest jsonReq = new JsonObjectRequest(Request.Method.GET,
                     URL_FEED_GET, null, new Response.Listener<JSONObject>() {
@@ -185,7 +185,7 @@ public class ArticleFragment extends Fragment {
             // Adding request to volley request queue
             AppController.getInstance().addToRequestQueue(jsonReq);
             // }
-        }
+       // }
 
             return root;
 
